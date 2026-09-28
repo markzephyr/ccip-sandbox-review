@@ -1,0 +1,124 @@
+import { Link } from "@tanstack/react-router";
+import { Activity, Code2, Layers, ShieldCheck, Zap } from "lucide-react";
+import type { ReactNode } from "react";
+
+const NAV = [
+  { to: "/", label: "Dual-Rail Ledger", icon: Layers },
+  { to: "/rails", label: "Rail & Acquisition Map", icon: Activity },
+  { to: "/reserves", label: "Reserve Attestation", icon: ShieldCheck },
+  { to: "/developer", label: "Developer Canvas", icon: Code2 },
+] as const;
+
+export function HubShell({
+  title,
+  subtitle,
+  live,
+  isFetching,
+  children,
+}: {
+  title: string;
+  subtitle: string;
+  live: boolean;
+  isFetching: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <div className="flex min-h-screen bg-background">
+      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:flex">
+        <div className="flex items-center gap-2.5 px-5 py-6">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+            <Zap className="h-4 w-4 text-primary-foreground" strokeWidth={2.5} />
+          </span>
+          <div className="leading-tight">
+            <p className="text-sm font-semibold text-sidebar-accent-foreground">StraitsX Hub</p>
+            <p className="text-[11px] text-sidebar-foreground/70">Institutional console</p>
+          </div>
+        </div>
+
+        <nav className="flex-1 space-y-1 px-3">
+          {NAV.map(({ to, label, icon: Icon }) => (
+            <Link
+              key={to}
+              to={to}
+              activeOptions={{ exact: to === "/" }}
+              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-medium text-sidebar-foreground/85 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              activeProps={{
+                className:
+                  "bg-sidebar-accent text-sidebar-accent-foreground shadow-[inset_3px_0_0_0_var(--sidebar-primary)]",
+              }}
+            >
+              <Icon className="h-4 w-4" />
+              {label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="m-3 rounded-lg border border-emerald-500/30 bg-emerald-950/20 p-3 shadow-sm">
+          <div className="flex items-center gap-2">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+            </span>
+            <p className="text-[11px] font-semibold text-emerald-400">
+              StraitsX Sandbox Engine - Active Connection
+            </p>
+          </div>
+          <p className="mt-1 font-mono text-[10px] text-sidebar-foreground/70">
+            Realtime dual-rail feed · 3s telemetry
+          </p>
+        </div>
+      </aside>
+
+      <div className="flex min-w-0 flex-1 flex-col">
+        <header className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-3 border-b border-border bg-card/95 px-6 py-4 backdrop-blur">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
+            <div>
+              <h1 className="text-lg font-semibold">{title}</h1>
+              <p className="text-xs text-muted-foreground">{subtitle}</p>
+            </div>
+            <div className="inline-flex items-center gap-1.5 self-start rounded-md border border-primary/30 bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary shadow-xs">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+              StraitsX Hub Proposal - Dedicated Evaluation Sandbox
+            </div>
+          </div>
+          <div className="flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1.5 shadow-xs">
+            <span
+              className={`h-2 w-2 rounded-full ${
+                isFetching ? "animate-pulse bg-primary" : "bg-emerald-500 animate-pulse"
+              }`}
+            />
+            <span className="font-mono text-[11px] text-muted-foreground">
+              {isFetching ? "SYNCING" : "LIVE SIMULATION · 3s"}
+            </span>
+          </div>
+        </header>
+
+        <nav className="flex gap-1 overflow-x-auto border-b border-border bg-card px-4 py-2 md:hidden">
+          {NAV.map(({ to, label }) => (
+            <Link
+              key={to}
+              to={to}
+              activeOptions={{ exact: to === "/" }}
+              className="whitespace-nowrap rounded-md px-3 py-1.5 text-xs font-medium text-muted-foreground"
+              activeProps={{ className: "bg-accent text-accent-foreground" }}
+            >
+              {label}
+            </Link>
+          ))}
+        </nav>
+
+        <main className="flex-1 p-6">{children}</main>
+      </div>
+    </div>
+  );
+}
+
+export function formatMoney(value: number, currency = "") {
+  return `${value.toLocaleString("en-SG", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}${
+    currency ? ` ${currency}` : ""
+  }`;
+}
+
+export function formatCompact(value: number) {
+  return value.toLocaleString("en-SG", { notation: "compact", maximumFractionDigits: 2 });
+}
