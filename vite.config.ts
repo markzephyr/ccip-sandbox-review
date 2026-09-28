@@ -8,7 +8,9 @@ export default defineConfig({
     tsconfigPaths(),
     tailwindcss(),
     tanstackStart({
-      server: { entry: "server" },
+      prerender: {
+        enabled: true,
+      },
     }),
   ],
 });
