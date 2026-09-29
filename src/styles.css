@@ -1,5 +1,4 @@
-@import "tailwindcss" source(none);
-@source "../src";
+@import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
@@ -148,7 +147,7 @@
   }
 }
 
-@utility metric-xl {
+.metric-xl {
   font-family: var(--font-mono);
   font-size: 2.25rem;
   line-height: 1.05;
@@ -157,7 +156,7 @@
   color: var(--color-teal);
 }
 
-@utility tabular {
+.tabular {
   font-variant-numeric: tabular-nums;
   font-family: var(--font-mono);
 }
