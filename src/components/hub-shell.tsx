@@ -30,8 +30,8 @@ export function HubShell({
             <Zap className="h-4 w-4 text-primary-foreground" strokeWidth={2.5} />
           </span>
           <div className="leading-tight">
-            <p className="text-sm font-semibold text-sidebar-accent-foreground">StraitsX Hub</p>
-            <p className="text-[11px] text-sidebar-foreground/70">Institutional console</p>
+            <p className="text-sm font-semibold text-sidebar-accent-foreground">Apex Rail</p>
+            <p className="text-[11px] text-sidebar-foreground/70">Multi-Chain Settlement</p>
           </div>
         </div>
 
@@ -60,7 +60,7 @@ export function HubShell({
               <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
             </span>
             <p className="text-[11px] font-semibold text-emerald-400">
-              StraitsX Sandbox Engine - Active Connection
+              Apex Engine v1.0.4 - Active Connection
             </p>
           </div>
           <p className="mt-1 font-mono text-[10px] text-sidebar-foreground/70">
@@ -78,7 +78,7 @@ export function HubShell({
             </div>
             <div className="inline-flex items-center gap-1.5 self-start rounded-md border border-primary/30 bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary shadow-xs">
               <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-              StraitsX Hub Proposal - Dedicated Evaluation Sandbox
+              Apex Rail - Multi-Chain Settlement Sandbox
             </div>
           </div>
           <div className="flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1.5 shadow-xs">

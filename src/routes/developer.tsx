@@ -4,18 +4,18 @@ import { toast } from "sonner";
 
 import { HubShell } from "@/components/hub-shell";
 import { Button } from "@/components/ui/button";
-import { useStraitsXDualRail } from "@/hooks/useStraitsXDualRail";
+import { useApexDualRail } from "@/hooks/useApexDualRail";
 
 export const Route = createFileRoute("/developer")({
   head: () => ({
     meta: [
-      { title: "Developer Canvas — StraitsX Hub" },
+      { title: "Developer Canvas — Apex Rail" },
       {
         name: "description",
         content:
-          "TypeScript interfaces and React snippets for the unified useStraitsXDualRail hook covering ledger, rails and reserves.",
+          "TypeScript interfaces and React snippets for the unified useApexDualRail hook covering ledger, rails and reserves.",
       },
-      { property: "og:title", content: "Developer Canvas — StraitsX Hub" },
+      { property: "og:title", content: "Developer Canvas — Apex Rail" },
       {
         property: "og:description",
         content: "One hook for ledger, rail health and reserve attestation feeds.",
@@ -28,7 +28,7 @@ export const Route = createFileRoute("/developer")({
 const SNIPPETS: Array<{ title: string; note: string; code: string }> = [
   {
     title: "Payload contracts",
-    note: "The FastAPI backend emits snake_case; these are the normalised view models.",
+    note: "The institutional backend emits snake_case; these are the normalised view models.",
     code: `export type LedgerStatus = "settled" | "pending" | "failed" | "processing";
 
 export interface LedgerRow {
@@ -64,11 +64,11 @@ export interface ReserveSnapshot {
 }`,
   },
   {
-    title: "useStraitsXDualRail",
+    title: "useApexDualRail",
     note: "A single hook polls all three routes every 5 seconds and exposes fetch state per feed.",
     code: `const POLL_MS = 5_000;
 
-export function useStraitsXDualRail() {
+export function useApexDualRail() {
   const ledger   = useFeed("/api/ledger",            parseLedger);
   const rails    = useFeed("/api/rails/health",      parseRails);
   const reserves = useFeed("/api/treasury/reserves", parseReserves);
@@ -78,7 +78,7 @@ export function useStraitsXDualRail() {
 
 function useFeed<T>(path: string, parse: (p: unknown) => T) {
   const query = useQuery({
-    queryKey: ["straitsx", path],
+    queryKey: ["apex", path],
     queryFn: ({ signal }) => fetchJson(path, signal).then(parse),
     refetchInterval: POLL_MS,
   });
@@ -89,7 +89,7 @@ function useFeed<T>(path: string, parse: (p: unknown) => T) {
     title: "Consuming in a component",
     note: "Skeletons render while a poll is in flight; layouts never shift on a partial payload.",
     code: `function LedgerTable() {
-  const { ledger } = useStraitsXDualRail();
+  const { ledger } = useApexDualRail();
 
   if (ledger.isLoading) return <LedgerSkeleton rows={6} />;
 
@@ -105,7 +105,7 @@ function useFeed<T>(path: string, parse: (p: unknown) => T) {
 ];
 
 function DeveloperPage() {
-  const { live, ledger } = useStraitsXDualRail();
+  const { live, ledger } = useApexDualRail();
 
   return (
     <HubShell

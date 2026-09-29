@@ -25,18 +25,18 @@ import {
 
 import { HubShell, formatCompact, formatMoney } from "@/components/hub-shell";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useStraitsXDualRail } from "@/hooks/useStraitsXDualRail";
+import { useApexDualRail } from "@/hooks/useApexDualRail";
 
 export const Route = createFileRoute("/reserves")({
   head: () => ({
     meta: [
-      { title: "Reserve Attestation — StraitsX Hub" },
+      { title: "Reserve Attestation — Apex Rail" },
       {
         name: "description",
         content:
           "Real-time 1:1 collateralization view of safeguarded bank balances against on-chain stablecoin circulating supply.",
       },
-      { property: "og:title", content: "Reserve Attestation — StraitsX Hub" },
+      { property: "og:title", content: "Reserve Attestation — Apex Rail" },
       {
         property: "og:description",
         content: "Off-chain reserves versus on-chain supply with a live 1:1 matching indicator.",
@@ -47,7 +47,7 @@ export const Route = createFileRoute("/reserves")({
 });
 
 function ReservesPage() {
-  const { reserves, live } = useStraitsXDualRail();
+  const { reserves, live } = useApexDualRail();
   const snap = reserves.data;
   const delta = snap.totalOffChain - snap.totalOnChain;
   const balanced = Math.abs(snap.collateralizationRatio - 100) < 0.01;
@@ -257,7 +257,7 @@ function ReservesPage() {
               <Banknote className="h-4 w-4 text-teal" />
               <h2 className="text-sm font-semibold">Off-chain safeguarded balances</h2>
             </div>
-            <span className="text-xs text-muted-foreground font-mono">MAS PS Act Compliant</span>
+            <span className="text-xs text-muted-foreground font-mono">Institutional Safeguarding Compliant</span>
           </header>
           {reserves.isLoading ? (
             <Skeleton className="mt-4 h-10 w-48" />

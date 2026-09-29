@@ -74,10 +74,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "StraitsX Hub" },
+      { title: "Apex Rail - Multi-Chain Settlement Sandbox" },
       {
         name: "description",
-        content: "Institutional dual-rail console for fiat and stablecoin settlement.",
+        content: "Institutional multi-chain settlement and dual-rail liquidity infrastructure.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

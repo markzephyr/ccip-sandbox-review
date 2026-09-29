@@ -1,6 +1,6 @@
-# StraitsX Hub
-
-Institutional dual-rail console for fiat and stablecoin settlement.
+# Apex Rail
+ 
+Multi-chain settlement sandbox and dual-rail liquidity infrastructure template.
 
 ## Development
 

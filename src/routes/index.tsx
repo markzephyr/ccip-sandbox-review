@@ -23,19 +23,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useStraitsXDualRail } from "@/hooks/useStraitsXDualRail";
-import type { LedgerRow, LedgerStatus } from "@/lib/straitsx";
+import { useApexDualRail } from "@/hooks/useApexDualRail";
+import type { LedgerRow, LedgerStatus } from "@/lib/apex";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Dual-Rail Ledger — StraitsX Hub" },
+      { title: "Dual-Rail Ledger — Apex Rail" },
       {
         name: "description",
         content:
           "Monitor settlement flowing between fiat banking rails and blockchain networks with live FX rate locks and gas costs.",
       },
-      { property: "og:title", content: "Dual-Rail Ledger — StraitsX Hub" },
+      { property: "og:title", content: "Dual-Rail Ledger — Apex Rail" },
       {
         property: "og:description",
         content: "Institutional console for fiat and stablecoin settlement across dual rails.",
@@ -58,17 +58,17 @@ const AVAILABLE_RAILS = [
   "Avalanche",
   "Hedera",
   "Zilliqa",
-  "FAST · DBS Bank",
-  "FAST · OCBC",
-  "FAST · UOB",
-  "FAST · Standard Chartered",
-  "BI-FAST · Bank Mandiri",
-  "BI-FAST · BCA",
+  "FAST · Tier-1 Clearing Bank A",
+  "FAST · Tier-1 Clearing Bank B",
+  "FAST · Tier-1 Clearing Bank C",
+  "FAST · Tier-1 Clearing Bank D",
+  "BI-FAST · Regional Clearing Bank A",
+  "BI-FAST · Regional Clearing Bank B",
 ];
 
 function LedgerPage() {
   const { ledger, live, approveTransaction, overrideRail, rejectTransaction } =
-    useStraitsXDualRail();
+    useApexDualRail();
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   // Filter & Search states
@@ -191,9 +191,9 @@ function LedgerPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Currencies</SelectItem>
-              <SelectItem value="XSGD">XSGD</SelectItem>
-              <SelectItem value="XIDR">XIDR</SelectItem>
-              <SelectItem value="USDC">USDC</SelectItem>
+              <SelectItem value="SGDX">SGDX</SelectItem>
+              <SelectItem value="USDX">USDX</SelectItem>
+              <SelectItem value="IDRX">IDRX</SelectItem>
             </SelectContent>
           </Select>
 

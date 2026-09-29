@@ -7,19 +7,19 @@ import { HubShell, formatCompact } from "@/components/hub-shell";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
-import { useStraitsXDualRail } from "@/hooks/useStraitsXDualRail";
-import type { RailHealth } from "@/lib/straitsx";
+import { useApexDualRail } from "@/hooks/useApexDualRail";
+import type { RailHealth } from "@/lib/apex";
 
 export const Route = createFileRoute("/rails")({
   head: () => ({
     meta: [
-      { title: "Rail & Acquisition Map — StraitsX Hub" },
+      { title: "Rail & Acquisition Map — Apex Rail" },
       {
         name: "description",
         content:
           "Live health grid for partner bank rails such as FAST and BI-FAST alongside blockchain network latency and uptime.",
       },
-      { property: "og:title", content: "Rail & Acquisition Map — StraitsX Hub" },
+      { property: "og:title", content: "Rail & Acquisition Map — Apex Rail" },
       {
         property: "og:description",
         content: "Latency, uptime and throughput for every fiat and blockchain rail.",
@@ -37,7 +37,7 @@ const STATUS_DOT: Record<RailHealth["status"], string> = {
 };
 
 function RailsPage() {
-  const { rails, live, pauseRail } = useStraitsXDualRail();
+  const { rails, live, pauseRail } = useApexDualRail();
 
   const togglePause = (rail: RailHealth) => {
     const isCurrentlyPaused = rail.status === "paused";
