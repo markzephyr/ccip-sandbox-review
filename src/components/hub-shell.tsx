@@ -41,7 +41,7 @@ export function HubShell({
               key={to}
               to={to}
               activeOptions={{ exact: to === "/" }}
-              className="group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-medium text-slate-400 transition-colors hover:bg-slate-800/50 hover:text-white"
+              className="group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-medium text-[#8A94A6] transition-colors hover:bg-[#1F2637]/60 hover:text-white"
               activeProps={{
                 className:
                   "text-white bg-[#0847F7]/12 shadow-[inset_3px_0_0_0_#0847F7] font-semibold",
@@ -63,7 +63,7 @@ export function HubShell({
               Apex Engine v1.0.4 - Active Connection
             </p>
           </div>
-          <p className="mt-1 font-mono text-[10px] text-slate-400">
+          <p className="mt-1 font-mono text-[10px] text-[#8A94A6]">
             Realtime dual-rail feed · 3s telemetry
           </p>
         </div>

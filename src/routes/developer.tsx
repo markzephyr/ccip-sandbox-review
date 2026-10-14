@@ -214,7 +214,7 @@ function DeveloperPage() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-7 px-2 text-[11px] text-slate-300 hover:text-white hover:bg-[#1F2637]"
+                className="h-7 px-2 text-[11px] text-[#C8D1E0] hover:text-white hover:bg-[#1F2637]"
                 onClick={() => {
                   navigator.clipboard?.writeText(s.code);
                   toast.success("Snippet copied");

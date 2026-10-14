@@ -318,8 +318,7 @@ function LedgerPage() {
                       {row.status === "pending" || row.status === "processing" ? (
                         <Button
                           size="sm"
-                          variant="outline"
-                          className="h-7 text-xs border-primary/40 text-primary hover:bg-primary/10"
+                          className="h-7 text-xs bg-[#0847F7] text-white font-semibold hover:bg-[#0847F7]/85 shadow-sm shadow-[#0847F7]/25"
                           onClick={() => handleApprove(row.id)}
                         >
                           <Check className="h-3 w-3 mr-1" /> Approve
