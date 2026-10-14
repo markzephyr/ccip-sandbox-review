@@ -108,7 +108,7 @@ export function normalizeLedgerRow(raw: unknown, index: number): LedgerRow {
       : "pending") as LedgerStatus,
     date: str(pick(r, "date", "created_at", "timestamp", "settled_at")),
     amount: num(pick(r, "amount", "amount_usd", "value")),
-    currency: str(pick(r, "currency", "asset", "ccy"), "SGDX"),
+    currency: str(pick(r, "currency", "asset", "ccy"), "XSGD"),
     sourceRail: str(pick(r, "source_rail", "sourceRail", "from_rail"), "—"),
     destinationRail: str(pick(r, "destination_rail", "destinationRail", "to_rail"), "—"),
     counterparty: str(pick(r, "counterparty", "counter_party", "partner"), "—"),
@@ -165,7 +165,7 @@ export function normalizeReserves(raw: unknown): ReserveSnapshot {
     const o = asDict(item);
     return {
       id: str(pick(o, "id", "token_id"), `token-${i}`),
-      token: str(pick(o, "token", "symbol", "asset"), "SGDX"),
+      token: str(pick(o, "token", "symbol", "asset"), "XSGD"),
       network: str(pick(o, "network", "chain", "blockchain"), "—"),
       circulatingSupply: num(pick(o, "circulating_supply", "circulatingSupply", "supply")),
     };

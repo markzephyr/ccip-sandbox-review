@@ -13,13 +13,13 @@ import type { RailHealth } from "@/lib/apex";
 export const Route = createFileRoute("/rails")({
   head: () => ({
     meta: [
-      { title: "Rail & Acquisition Map — Apex Rail" },
+      { title: "Rail & Acquisition Map — CCIP Bridge Engine" },
       {
         name: "description",
         content:
           "Live health grid for partner bank rails such as FAST and BI-FAST alongside blockchain network latency and uptime.",
       },
-      { property: "og:title", content: "Rail & Acquisition Map — Apex Rail" },
+      { property: "og:title", content: "Rail & Acquisition Map — CCIP Bridge Engine" },
       {
         property: "og:description",
         content: "Latency, uptime and throughput for every fiat and blockchain rail.",

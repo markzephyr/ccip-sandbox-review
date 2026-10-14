@@ -9,13 +9,13 @@ import { useApexDualRail } from "@/hooks/useApexDualRail";
 export const Route = createFileRoute("/developer")({
   head: () => ({
     meta: [
-      { title: "Developer Canvas — Apex Rail" },
+      { title: "Developer Canvas — CCIP Bridge Engine" },
       {
         name: "description",
         content:
           "TypeScript interfaces and React snippets for the unified useApexDualRail hook covering ledger, rails and reserves.",
       },
-      { property: "og:title", content: "Developer Canvas — Apex Rail" },
+      { property: "og:title", content: "Developer Canvas — CCIP Bridge Engine" },
       {
         property: "og:description",
         content: "One hook for ledger, rail health and reserve attestation feeds.",

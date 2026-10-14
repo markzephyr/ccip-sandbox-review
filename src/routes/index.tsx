@@ -29,13 +29,13 @@ import type { LedgerRow, LedgerStatus } from "@/lib/apex";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Dual-Rail Ledger — Apex Rail" },
+      { title: "Dual-Rail Ledger — CCIP Bridge Engine" },
       {
         name: "description",
         content:
           "Monitor settlement flowing between fiat banking rails and blockchain networks with live FX rate locks and gas costs.",
       },
-      { property: "og:title", content: "Dual-Rail Ledger — Apex Rail" },
+      { property: "og:title", content: "Dual-Rail Ledger — CCIP Bridge Engine" },
       {
         property: "og:description",
         content: "Institutional console for fiat and stablecoin settlement across dual rails.",
@@ -58,12 +58,12 @@ const AVAILABLE_RAILS = [
   "Avalanche",
   "Hedera",
   "Zilliqa",
-  "FAST · Tier-1 Clearing Bank A",
-  "FAST · Tier-1 Clearing Bank B",
-  "FAST · Tier-1 Clearing Bank C",
-  "FAST · Tier-1 Clearing Bank D",
-  "BI-FAST · Regional Clearing Bank A",
-  "BI-FAST · Regional Clearing Bank B",
+  "FAST · ANZ Bank",
+  "FAST · BNZ",
+  "FAST · Standard Chartered",
+  "FAST · Fidelity International",
+  "BI-FAST · Euroclear",
+  "BI-FAST · Clearstream",
 ];
 
 function LedgerPage() {
@@ -191,9 +191,9 @@ function LedgerPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Currencies</SelectItem>
-              <SelectItem value="SGDX">SGDX</SelectItem>
-              <SelectItem value="USDX">USDX</SelectItem>
-              <SelectItem value="IDRX">IDRX</SelectItem>
+              <SelectItem value="XSGD">XSGD</SelectItem>
+              <SelectItem value="USDC">USDC</SelectItem>
+              <SelectItem value="BIDR">BIDR</SelectItem>
             </SelectContent>
           </Select>
 

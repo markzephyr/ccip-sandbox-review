@@ -74,7 +74,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Apex Rail - Multi-Chain Settlement Sandbox" },
+      { title: "CCIP Bridge Engine - Multi-Chain Settlement Sandbox" },
       {
         name: "description",
         content: "Institutional multi-chain settlement and dual-rail liquidity infrastructure.",

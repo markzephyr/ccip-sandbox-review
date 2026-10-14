@@ -30,13 +30,13 @@ import { useApexDualRail } from "@/hooks/useApexDualRail";
 export const Route = createFileRoute("/reserves")({
   head: () => ({
     meta: [
-      { title: "Reserve Attestation — Apex Rail" },
+      { title: "Reserve Attestation — CCIP Bridge Engine" },
       {
         name: "description",
         content:
           "Real-time 1:1 collateralization view of safeguarded bank balances against on-chain stablecoin circulating supply.",
       },
-      { property: "og:title", content: "Reserve Attestation — Apex Rail" },
+      { property: "og:title", content: "Reserve Attestation — CCIP Bridge Engine" },
       {
         property: "og:description",
         content: "Off-chain reserves versus on-chain supply with a live 1:1 matching indicator.",
