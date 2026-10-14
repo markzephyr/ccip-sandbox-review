@@ -52,7 +52,7 @@ function ReservesPage() {
   const delta = snap.totalOffChain - snap.totalOnChain;
   const balanced = Math.abs(snap.collateralizationRatio - 100) < 0.01;
 
-  // Generate historical collateralization trend data
+  // Dynamic trend data
   const historicalTrend = useMemo(() => {
     const points = [
       { time: "00:00", ratio: 100.01, reserves: 414.2, supply: 414.16 },
@@ -78,13 +78,13 @@ function ReservesPage() {
         category: "Off-Chain Fiat Bank Reserves",
         amount: snap.totalOffChain / 1_000_000,
         currency: "SGD (M)",
-        fill: "var(--color-primary, #0d9488)",
+        fill: "#8A94A6",
       },
       {
         category: "On-Chain Stablecoin Supply",
         amount: snap.totalOnChain / 1_000_000,
         currency: "SGD (M)",
-        fill: "#0284c7",
+        fill: "#0847F7",
       },
     ];
   }, [snap.totalOffChain, snap.totalOnChain]);
@@ -99,14 +99,14 @@ function ReservesPage() {
       {/* Top Banner Status */}
       <div
         className={`rounded-xl border p-6 shadow-panel ${
-          balanced ? "border-emerald-500/40 bg-emerald-500/10" : "border-amber-500/40 bg-amber-500/10"
+          balanced ? "border-[#00B171]/40 bg-[#00B171]/10" : "border-[#F5A623]/40 bg-[#F5A623]/10"
         }`}
       >
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <span
               className={`flex h-11 w-11 items-center justify-center rounded-xl shadow-xs ${
-                balanced ? "bg-emerald-600 text-white" : "bg-amber-600 text-white"
+                balanced ? "bg-[#00B171] text-white" : "bg-[#F5A623] text-white"
               }`}
             >
               {balanced ? (
@@ -127,10 +127,10 @@ function ReservesPage() {
                     {snap.collateralizationRatio.toFixed(2)}%
                   </p>
                   <span
-                    className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full ${
+                    className={`inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full ${
                       balanced
-                        ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400"
-                        : "bg-amber-500/20 text-amber-600 dark:text-amber-400"
+                        ? "bg-[#00B171]/15 text-[#00B171] border border-[#00B171]/30"
+                        : "bg-[#F5A623]/15 text-[#F5A623] border border-[#F5A623]/30"
                     }`}
                   >
                     {balanced ? "1:1 Strict Peg Maintained" : "Variance Monitored"}
@@ -151,7 +151,7 @@ function ReservesPage() {
         <div className="mt-5 h-2.5 overflow-hidden rounded-full bg-muted/60">
           <div
             className={`h-full rounded-full transition-all duration-500 ${
-              balanced ? "bg-emerald-500" : "bg-amber-500"
+              balanced ? "bg-[#00B171]" : "bg-[#F5A623]"
             }`}
             style={{ width: `${Math.min(snap.collateralizationRatio, 120) / 1.2}%` }}
           />
@@ -164,7 +164,7 @@ function ReservesPage() {
         <section className="rounded-xl border border-border bg-card p-5 shadow-panel">
           <div className="flex items-center justify-between pb-3 border-b border-border">
             <div className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-primary" />
+              <TrendingUp className="h-4 w-4 text-[#0847F7]" />
               <div>
                 <h3 className="text-sm font-semibold text-foreground">
                   Historical Collateralization Ratio
@@ -174,7 +174,7 @@ function ReservesPage() {
                 </p>
               </div>
             </div>
-            <span className="text-[11px] font-mono text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded">
+            <span className="text-[11px] font-mono text-[#00B171] bg-[#00B171]/10 px-2 py-0.5 rounded border border-[#00B171]/20">
               Mean: 100.00%
             </span>
           </div>
@@ -184,21 +184,21 @@ function ReservesPage() {
               <AreaChart data={historicalTrend} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorRatio" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#0d9488" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#0d9488" stopOpacity={0.0} />
+                    <stop offset="5%" stopColor="#0847F7" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#0847F7" stopOpacity={0.0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                <XAxis dataKey="time" tick={{ fontSize: 11 }} />
-                <YAxis domain={[99.9, 100.1]} tick={{ fontSize: 11 }} tickFormatter={(v) => `${v}%`} />
+                <CartesianGrid strokeDasharray="3 3" opacity={0.15} stroke="#2A3347" />
+                <XAxis dataKey="time" tick={{ fontSize: 11, fill: "#8A94A6" }} stroke="#2A3347" />
+                <YAxis domain={[99.9, 100.1]} tick={{ fontSize: 11, fill: "#8A94A6" }} stroke="#2A3347" tickFormatter={(v) => `${v}%`} />
                 <Tooltip
                   formatter={(val: number) => [`${val}%`, "Collateral Ratio"]}
-                  contentStyle={{ backgroundColor: "rgba(15, 23, 42, 0.9)", borderRadius: "8px", border: "1px solid #334155", color: "#fff", fontSize: "12px" }}
+                  contentStyle={{ backgroundColor: "#161B26", borderRadius: "8px", border: "1px solid #2A3347", color: "#F8FAFC", fontSize: "12px" }}
                 />
                 <Area
                   type="monotone"
                   dataKey="ratio"
-                  stroke="#0d9488"
+                  stroke="#0847F7"
                   strokeWidth={2.5}
                   fillOpacity={1}
                   fill="url(#colorRatio)"
@@ -212,7 +212,7 @@ function ReservesPage() {
         <section className="rounded-xl border border-border bg-card p-5 shadow-panel">
           <div className="flex items-center justify-between pb-3 border-b border-border">
             <div className="flex items-center gap-2">
-              <Activity className="h-4 w-4 text-sky-500" />
+              <Activity className="h-4 w-4 text-[#0847F7]" />
               <div>
                 <h3 className="text-sm font-semibold text-foreground">
                   1:1 Asset Matching Delta
@@ -222,7 +222,7 @@ function ReservesPage() {
                 </p>
               </div>
             </div>
-            <span className="text-[11px] font-mono text-primary bg-primary/10 px-2 py-0.5 rounded">
+            <span className="text-[11px] font-mono text-[#0847F7] bg-[#0847F7]/10 px-2 py-0.5 rounded border border-[#0847F7]/20">
               Delta: {delta >= 0 ? `+${formatCompact(delta)} SGD` : `${formatCompact(delta)} SGD`}
             </span>
           </div>
@@ -230,14 +230,14 @@ function ReservesPage() {
           <div className="mt-4 h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={assetDistribution} layout="vertical" margin={{ top: 10, right: 30, left: 20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" opacity={0.2} horizontal={false} />
-                <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={(v) => `${v}M`} />
+                <CartesianGrid strokeDasharray="3 3" opacity={0.15} stroke="#2A3347" horizontal={false} />
+                <XAxis type="number" tick={{ fontSize: 11, fill: "#8A94A6" }} stroke="#2A3347" tickFormatter={(v) => `${v}M`} />
                 <YAxis dataKey="category" type="category" hide />
                 <Tooltip
                   formatter={(val: number) => [`${val} Million SGD`, "Total Assets"]}
-                  contentStyle={{ backgroundColor: "rgba(15, 23, 42, 0.9)", borderRadius: "8px", border: "1px solid #334155", color: "#fff", fontSize: "12px" }}
+                  contentStyle={{ backgroundColor: "#161B26", borderRadius: "8px", border: "1px solid #2A3347", color: "#F8FAFC", fontSize: "12px" }}
                 />
-                <Legend wrapperStyle={{ fontSize: "12px", paddingTop: "10px" }} />
+                <Legend wrapperStyle={{ fontSize: "12px", paddingTop: "10px", color: "#8A94A6" }} />
                 <Bar dataKey="amount" name="Capital Volume (M SGD)" radius={[0, 4, 4, 0]}>
                   {assetDistribution.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.fill} />
@@ -272,13 +272,13 @@ function ReservesPage() {
               : snap.offChain.map((a) => (
                   <li
                     key={a.id}
-                    className="flex items-center justify-between rounded-lg bg-mint-tint px-4 py-3"
+                    className="flex items-center justify-between rounded-lg border border-[#2A3347] bg-[#0E1119] px-4 py-3"
                   >
                     <div>
-                      <p className="text-[13px] font-medium text-teal">{a.custodian}</p>
+                      <p className="text-[13px] font-medium text-white">{a.custodian}</p>
                       <p className="text-[11px] text-muted-foreground">{a.account}</p>
                     </div>
-                    <p className="tabular text-[13px] font-semibold text-teal">
+                    <p className="tabular text-[13px] font-semibold text-white">
                       {formatMoney(a.balance, a.currency)}
                     </p>
                   </li>
@@ -289,7 +289,7 @@ function ReservesPage() {
         <section className="rounded-xl border border-border bg-card p-5 shadow-panel">
           <header className="flex items-center justify-between pb-2 border-b border-border">
             <div className="flex items-center gap-2">
-              <Coins className="h-4 w-4 text-teal" />
+              <Coins className="h-4 w-4 text-[#0847F7]" />
               <h2 className="text-sm font-semibold">On-chain circulating supply</h2>
             </div>
             <span className="text-xs text-muted-foreground font-mono">Real-time RPC Sync</span>
@@ -307,13 +307,13 @@ function ReservesPage() {
               : snap.onChain.map((t) => (
                   <li
                     key={t.id}
-                    className="flex items-center justify-between rounded-lg bg-mint-tint px-4 py-3"
+                    className="flex items-center justify-between rounded-lg border border-[#2A3347] bg-[#0E1119] px-4 py-3"
                   >
                     <div>
-                      <p className="text-[13px] font-medium text-teal">{t.token}</p>
+                      <p className="text-[13px] font-medium text-white">{t.token}</p>
                       <p className="text-[11px] text-muted-foreground">{t.network}</p>
                     </div>
-                    <p className="tabular text-[13px] font-semibold text-teal">
+                    <p className="tabular text-[13px] font-semibold text-white">
                       {formatMoney(t.circulatingSupply)}
                     </p>
                   </li>

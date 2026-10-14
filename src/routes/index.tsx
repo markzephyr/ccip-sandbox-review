@@ -46,10 +46,10 @@ export const Route = createFileRoute("/")({
 });
 
 const STATUS_STYLE: Record<LedgerStatus, string> = {
-  settled: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/40",
-  pending: "bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/40",
-  processing: "bg-blue-500/15 text-blue-600 dark:text-blue-400 border-blue-500/40",
-  failed: "bg-destructive/15 text-destructive border-destructive/30",
+  settled: "bg-[#00B171]/15 text-[#00B171] border-[#00B171]/40",
+  pending: "bg-[#F5A623]/15 text-[#F5A623] border-[#F5A623]/40",
+  processing: "bg-[#0847F7]/15 text-[#7DD3FC] border-[#0847F7]/40",
+  failed: "bg-[#EF4444]/15 text-[#EF4444] border-[#EF4444]/30",
 };
 
 const AVAILABLE_RAILS = [
@@ -273,8 +273,8 @@ function LedgerPage() {
                   <tr
                     key={row.id}
                     onClick={() => setSelectedId(row.id)}
-                    className={`cursor-pointer border-b border-border transition-colors last:border-0 hover:bg-mint-tint ${
-                      selected?.id === row.id ? "bg-mint-tint" : ""
+                    className={`cursor-pointer border-b border-border transition-colors last:border-0 hover:bg-[#1F2637]/50 ${
+                      selected?.id === row.id ? "bg-[#0847F7]/12 shadow-[inset_3px_0_0_0_#0847F7]" : ""
                     }`}
                   >
                     <td className="px-4 py-3.5">
@@ -284,31 +284,31 @@ function LedgerPage() {
                         <span
                           className={`h-1.5 w-1.5 rounded-full ${
                             row.status === "settled"
-                              ? "bg-emerald-500"
+                              ? "bg-[#00B171]"
                               : row.status === "processing"
-                              ? "bg-blue-500 animate-pulse"
+                              ? "bg-[#0847F7] animate-pulse"
                               : row.status === "pending"
-                              ? "bg-amber-500"
-                              : "bg-destructive"
+                              ? "bg-[#F5A623]"
+                              : "bg-[#EF4444]"
                           }`}
                         />
                         {row.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3.5 tabular text-[13px] font-medium text-teal">
+                    <td className="px-4 py-3.5 tabular text-[13px] font-medium text-white">
                       {row.id}
                     </td>
                     <td className="px-4 py-3.5 text-xs text-muted-foreground">
                       <span className="inline-flex items-center gap-1.5">
                         {row.sourceRail}
-                        <ArrowRight className="h-3 w-3 text-primary" />
+                        <ArrowRight className="h-3 w-3 text-[#0847F7]" />
                         {row.destinationRail}
                       </span>
                     </td>
                     <td className="px-4 py-3.5 tabular text-xs text-muted-foreground">
                       {row.date ? new Date(row.date).toLocaleString("en-SG") : "—"}
                     </td>
-                    <td className="px-4 py-3.5 tabular text-right text-[13px] font-semibold text-teal">
+                    <td className="px-4 py-3.5 tabular text-right text-[13px] font-semibold text-white">
                       {formatMoney(row.amount, row.currency)}
                     </td>
                     <td
@@ -353,7 +353,7 @@ function LedgerPage() {
                       {selected.status}
                     </span>
                   </div>
-                  <p className="tabular mt-1 text-lg font-semibold text-teal">{selected.id}</p>
+                  <p className="tabular mt-1 text-lg font-semibold text-white">{selected.id}</p>
                 </div>
                 <button
                   onClick={() => setSelectedId(null)}
@@ -365,14 +365,14 @@ function LedgerPage() {
               </div>
 
               {/* Dynamic Live Ticking FX Rate display */}
-              <div className="mt-5 rounded-lg bg-mint-tint p-4 border border-primary/20">
+              <div className="mt-5 rounded-lg border border-[#2A3347] bg-[#0E1119] p-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-[11px] font-medium text-teal">
-                    <Lock className="h-3.5 w-3.5 text-primary" /> LIVE FX RATE LOCK
+                  <div className="flex items-center gap-2 text-[11px] font-medium text-[#7DD3FC]">
+                    <Lock className="h-3.5 w-3.5 text-[#0847F7]" /> LIVE FX RATE LOCK
                   </div>
-                  <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
+                  <span className="flex h-2 w-2 rounded-full bg-[#00B171] animate-ping" />
                 </div>
-                <p className="metric-xl mt-2 tracking-tight">
+                <p className="metric-xl mt-2 tracking-tight text-white">
                   {selected.fxRate.toLocaleString("en-SG", {
                     minimumFractionDigits: 4,
                     maximumFractionDigits: 4,
@@ -396,14 +396,14 @@ function LedgerPage() {
                 ].map(([k, v]) => (
                   <div key={k} className="flex justify-between gap-4 border-b border-border pb-2">
                     <dt className="text-muted-foreground">{k}</dt>
-                    <dd className="text-right font-medium text-teal">{v}</dd>
+                    <dd className="text-right font-medium text-white">{v}</dd>
                   </div>
                 ))}
                 <div className="flex items-center justify-between gap-4 border-b border-border pb-2">
                   <dt className="inline-flex items-center gap-1.5 text-muted-foreground">
-                    <Fuel className="h-3.5 w-3.5" /> Gas cost
+                    <Fuel className="h-3.5 w-3.5 text-[#0847F7]" /> Gas cost
                   </dt>
-                  <dd className="tabular font-medium text-teal">
+                  <dd className="tabular font-medium text-white">
                     {selected.gasCost} {selected.gasCurrency}
                   </dd>
                 </div>

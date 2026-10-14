@@ -30,10 +30,10 @@ export const Route = createFileRoute("/rails")({
 });
 
 const STATUS_DOT: Record<RailHealth["status"], string> = {
-  operational: "bg-primary",
-  degraded: "bg-warning",
-  paused: "bg-muted-foreground",
-  down: "bg-destructive",
+  operational: "bg-[#00B171]",
+  degraded: "bg-[#F5A623]",
+  paused: "bg-[#8A94A6]",
+  down: "bg-[#EF4444]",
 };
 
 function RailsPage() {
@@ -74,21 +74,31 @@ function RailsPage() {
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-2.5">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-mint-tint">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#2A3347] bg-[#0E1119]">
                       {rail.type === "bank" ? (
-                        <Building2 className="h-4 w-4 text-teal" />
+                        <Building2 className="h-4 w-4 text-[#0847F7]" />
                       ) : (
-                        <Link2 className="h-4 w-4 text-teal" />
+                        <Link2 className="h-4 w-4 text-[#0847F7]" />
                       )}
                     </span>
                     <div>
-                      <p className="text-sm font-semibold text-teal">{rail.name}</p>
+                      <p className="text-sm font-semibold text-white">{rail.name}</p>
                       <p className="text-[11px] text-muted-foreground">
                         {rail.region} · {rail.type === "bank" ? "Bank rail" : "Blockchain"}
                       </p>
                     </div>
                   </div>
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-border px-2 py-0.5 text-[11px] capitalize text-muted-foreground">
+                  <span
+                    className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-medium capitalize ${
+                      rail.status === "operational"
+                        ? "border-[#00B171]/30 bg-[#00B171]/10 text-[#00B171]"
+                        : rail.status === "degraded"
+                        ? "border-[#F5A623]/30 bg-[#F5A623]/10 text-[#F5A623]"
+                        : rail.status === "paused"
+                        ? "border-[#8A94A6]/30 bg-[#8A94A6]/10 text-[#8A94A6]"
+                        : "border-[#EF4444]/30 bg-[#EF4444]/10 text-[#EF4444]"
+                    }`}
+                  >
                     <span
                       className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[rail.status]}`}
                     />
@@ -102,11 +112,11 @@ function RailsPage() {
                     ["Uptime", `${rail.uptime.toFixed(2)}%`],
                     ["24h txns", formatCompact(rail.throughput24h)],
                   ].map(([label, value]) => (
-                    <div key={label} className="rounded-lg bg-mint-tint px-3 py-2">
+                    <div key={label} className="rounded-lg border border-[#2A3347] bg-[#0E1119] px-3 py-2">
                       <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
                         {label}
                       </p>
-                      <p className="tabular mt-0.5 text-sm font-semibold text-teal">{value}</p>
+                      <p className="tabular mt-0.5 text-sm font-semibold text-white">{value}</p>
                     </div>
                   ))}
                 </div>
@@ -124,9 +134,13 @@ function RailsPage() {
                       aria-label={`Pause ${rail.name}`}
                     />
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
-                      className="h-7 px-2 text-[11px]"
+                      className={`h-7 px-2.5 text-[11px] font-medium transition-colors ${
+                        isPaused
+                          ? "border-[#0847F7] bg-[#0847F7] text-white hover:bg-[#0847F7]/90 shadow-sm"
+                          : "border-[#0847F7]/40 bg-[#0847F7]/10 text-[#0847F7] hover:bg-[#0847F7]/20"
+                      }`}
                       onClick={() => togglePause(rail)}
                     >
                       {isPaused ? (

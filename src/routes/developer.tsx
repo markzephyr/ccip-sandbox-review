@@ -104,6 +104,68 @@ function useFeed<T>(path: string, parse: (p: unknown) => T) {
   },
 ];
 
+function highlightCode(code: string) {
+  // Simple token-based highlighter for TypeScript syntax in VS Code Dark Modern style
+  const lines = code.split("\n");
+  return lines.map((line, lineIdx) => {
+    // Check for comment
+    const commentIdx = line.indexOf("//");
+    let codePart = commentIdx !== -1 ? line.slice(0, commentIdx) : line;
+    const commentPart = commentIdx !== -1 ? line.slice(commentIdx) : "";
+
+    // Highlight strings
+    const tokens: Array<{ text: string; color: string }> = [];
+    // Regex for keywords, types, strings, numbers, identifiers
+    const regex = /(".*?"|'.*?'|`.*?`|\b(?:export|type|interface|const|function|return|boolean|string|number|null|undefined|await|async|if|else)\b|\b[A-Z][a-zA-Z0-9_]*\b|\b[0-9]+(?:\.[0-9]+)?(?:_[0-9]+)?\b|[a-zA-Z_$][a-zA-Z0-9_$]*|[^\s\w]+|\s+)/g;
+
+    let match;
+    let lastIndex = 0;
+    while ((match = regex.exec(codePart)) !== null) {
+      const token = match[0];
+      let color = "#D4D4D4"; // default VS Code Dark Modern text
+
+      if (token.startsWith('"') || token.startsWith("'") || token.startsWith("`")) {
+        color = "#CE9178"; // string (warm terracotta orange)
+      } else if (
+        /^(export|type|interface|const|function|return|await|async|if|else)$/.test(token)
+      ) {
+        color = "#569CD6"; // keyword (VS Code blue)
+      } else if (/^(boolean|string|number|null|undefined)$/.test(token)) {
+        color = "#4EC9B0"; // primitive types (teal green)
+      } else if (/^[A-Z][a-zA-Z0-9_]*$/.test(token)) {
+        color = "#4EC9B0"; // Interface / Type / Component names
+      } else if (/^[0-9]+(?:\.[0-9]+)?(?:_[0-9]+)?$/.test(token)) {
+        color = "#B5CEA8"; // numbers (soft light green)
+      } else if (/^(use[A-Z][a-zA-Z0-9_]*|fetchJson|parse[A-Z][a-zA-Z0-9_]*)$/.test(token)) {
+        color = "#DCDCAA"; // functions (warm soft yellow)
+      } else if (/^[a-z_][a-zA-Z0-9_]*$/.test(token)) {
+        color = "#9CDCFE"; // property names / variables (light sky blue)
+      } else if (/^[:=;{}()[\],.<>|]$/.test(token)) {
+        color = "#D4D4D4"; // delimiters
+      }
+
+      tokens.push({ text: token, color });
+      lastIndex = regex.lastIndex;
+    }
+
+    return (
+      <div key={lineIdx} className="table-row">
+        <span className="table-cell select-none pr-4 text-right font-mono text-[11px] text-[#5A6982]">
+          {lineIdx + 1}
+        </span>
+        <span className="table-cell whitespace-pre font-mono">
+          {tokens.map((t, i) => (
+            <span key={i} style={{ color: t.color }}>
+              {t.text}
+            </span>
+          ))}
+          {commentPart && <span style={{ color: "#6A9955" }}>{commentPart}</span>}
+        </span>
+      </div>
+    );
+  });
+}
+
 function DeveloperPage() {
   const { live, ledger } = useApexDualRail();
 
@@ -121,11 +183,13 @@ function DeveloperPage() {
           ["GET", "/api/treasury/reserves"],
         ].map(([method, path]) => (
           <div key={path} className="rounded-xl border border-border bg-card p-4 shadow-panel">
-            <span className="rounded-md bg-primary/20 px-2 py-0.5 font-mono text-[11px] font-semibold text-teal">
+            <span className="inline-flex items-center rounded-md bg-[#0847F7]/15 border border-[#38BDF8]/30 px-2 py-0.5 font-mono text-[11px] font-semibold text-[#7DD3FC]">
               {method}
             </span>
-            <p className="tabular mt-2 text-[13px] text-teal">{path}</p>
-            <p className="mt-1 text-[11px] text-muted-foreground">Polled every 5 seconds</p>
+            <div className="mt-2 inline-block rounded-md bg-[#0847F7]/10 border border-[#38BDF8]/20 px-2.5 py-1">
+              <p className="tabular font-mono text-[12px] font-medium text-[#BAE6FD]">{path}</p>
+            </div>
+            <p className="mt-2 text-[11px] text-muted-foreground">Polled every 5 seconds</p>
           </div>
         ))}
       </div>
@@ -133,26 +197,37 @@ function DeveloperPage() {
       <div className="mt-6 space-y-5">
         {SNIPPETS.map((s) => (
           <section key={s.title} className="overflow-hidden rounded-xl border border-border bg-card shadow-panel">
-            <header className="flex items-start justify-between gap-4 border-b border-border px-5 py-3.5">
-              <div>
-                <h2 className="text-sm font-semibold">{s.title}</h2>
-                <p className="text-[11px] text-muted-foreground">{s.note}</p>
+            {/* Terminal Header */}
+            <header className="flex items-center justify-between gap-4 border-b border-border bg-[#121620] px-4 py-3">
+              <div className="flex items-center gap-3">
+                {/* Window control dots */}
+                <div className="flex items-center gap-1.5">
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#EF4444]/80" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#F5A623]/80" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#00B171]/80" />
+                </div>
+                <div className="border-l border-border/80 pl-3">
+                  <h2 className="text-xs font-semibold text-white tracking-wide">{s.title}</h2>
+                  <p className="text-[10px] text-muted-foreground">{s.note}</p>
+                </div>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-7 px-2 text-[11px]"
+                className="h-7 px-2 text-[11px] text-slate-300 hover:text-white hover:bg-[#1F2637]"
                 onClick={() => {
                   navigator.clipboard?.writeText(s.code);
                   toast.success("Snippet copied");
                 }}
               >
-                <Copy className="h-3 w-3" /> Copy
+                <Copy className="h-3 w-3 mr-1" /> Copy
               </Button>
             </header>
-            <pre className="overflow-x-auto bg-teal px-5 py-4 text-[12.5px] leading-relaxed text-teal-foreground">
-              <code>{s.code}</code>
-            </pre>
+
+            {/* Dark Terminal Window with VS Code Dark Modern Colors */}
+            <div className="overflow-x-auto bg-[#0B0D14] p-4 text-[12.5px] leading-relaxed">
+              <div className="table w-full">{highlightCode(s.code)}</div>
+            </div>
           </section>
         ))}
       </div>

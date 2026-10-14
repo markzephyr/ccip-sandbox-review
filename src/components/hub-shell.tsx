@@ -41,10 +41,10 @@ export function HubShell({
               key={to}
               to={to}
               activeOptions={{ exact: to === "/" }}
-              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-medium text-sidebar-foreground/85 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              className="group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-medium text-slate-400 transition-colors hover:bg-slate-800/50 hover:text-white"
               activeProps={{
                 className:
-                  "bg-sidebar-accent text-sidebar-accent-foreground shadow-[inset_3px_0_0_0_var(--sidebar-primary)]",
+                  "text-white bg-[#0847F7]/12 shadow-[inset_3px_0_0_0_#0847F7] font-semibold",
               }}
             >
               <Icon className="h-4 w-4" />
@@ -53,17 +53,17 @@ export function HubShell({
           ))}
         </nav>
 
-        <div className="m-3 rounded-lg border border-emerald-500/30 bg-emerald-950/20 p-3 shadow-sm">
+        <div className="m-3 rounded-lg border border-[#2A3347] bg-[#161B26] p-3 shadow-sm">
           <div className="flex items-center gap-2">
             <span className="relative flex h-2.5 w-2.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#00B171] opacity-75"></span>
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#00B171]"></span>
             </span>
-            <p className="text-[11px] font-semibold text-emerald-400">
+            <p className="text-[11px] font-semibold text-[#00B171]">
               Apex Engine v1.0.4 - Active Connection
             </p>
           </div>
-          <p className="mt-1 font-mono text-[10px] text-sidebar-foreground/70">
+          <p className="mt-1 font-mono text-[10px] text-slate-400">
             Realtime dual-rail feed · 3s telemetry
           </p>
         </div>
@@ -76,15 +76,15 @@ export function HubShell({
               <h1 className="text-lg font-semibold">{title}</h1>
               <p className="text-xs text-muted-foreground">{subtitle}</p>
             </div>
-            <div className="inline-flex items-center gap-1.5 self-start rounded-md border border-primary/30 bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary shadow-xs">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+            <div className="inline-flex items-center gap-1.5 self-start rounded-md border border-[#0847F7]/30 bg-[#0847F7]/10 px-2.5 py-1 text-[11px] font-medium text-[#0847F7] shadow-xs">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#0847F7]" />
               Apex Rail - Multi-Chain Settlement Sandbox
             </div>
           </div>
           <div className="flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1.5 shadow-xs">
             <span
               className={`h-2 w-2 rounded-full ${
-                isFetching ? "animate-pulse bg-primary" : "bg-emerald-500 animate-pulse"
+                isFetching ? "animate-pulse bg-[#0847F7]" : "bg-[#00B171] animate-pulse"
               }`}
             />
             <span className="font-mono text-[11px] text-muted-foreground">

@@ -65,66 +65,76 @@
 :root {
   --radius: 0.625rem;
 
-  /* Brand */
-  --mint: oklch(0.7726 0.1712 163.2);
-  --mint-tint: oklch(0.9772 0.0143 165);
-  --teal: oklch(0.3172 0.0472 178.5);
-  --teal-foreground: oklch(0.9772 0.0143 165);
+  /* Chainlink Enterprise Dark Mode Tokens */
+  --primary: #0847F7;
+  --primary-foreground: #FFFFFF;
+  --chainlink-blue: #0847F7;
+  --steel-border: #2A3347;
+  --surface-navy: #161B26;
+  --dark-core: #0E1119;
+  --terminal-bg: #0B0D14;
+  --success-green: #00B171;
+  --warning-amber: #F5A623;
 
-  --background: oklch(0.9772 0.0143 165);
-  --foreground: oklch(0.3172 0.0472 178.5);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.3172 0.0472 178.5);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.3172 0.0472 178.5);
-  --primary: oklch(0.7726 0.1712 163.2);
-  --primary-foreground: oklch(0.24 0.045 178.5);
-  --secondary: oklch(0.95 0.021 168);
-  --secondary-foreground: oklch(0.3172 0.0472 178.5);
-  --muted: oklch(0.958 0.014 168);
-  --muted-foreground: oklch(0.545 0.031 180);
-  --accent: oklch(0.93 0.045 167);
-  --accent-foreground: oklch(0.3172 0.0472 178.5);
-  --destructive: oklch(0.58 0.21 25.5);
-  --destructive-foreground: oklch(0.99 0.005 160);
-  --warning: oklch(0.79 0.155 75);
-  --warning-foreground: oklch(0.3 0.06 75);
-  --border: oklch(0.905 0.021 168);
-  --input: oklch(0.905 0.021 168);
-  --ring: oklch(0.7726 0.1712 163.2);
-  --chart-1: oklch(0.7726 0.1712 163.2);
-  --chart-2: oklch(0.3172 0.0472 178.5);
-  --chart-3: oklch(0.62 0.12 200);
-  --chart-4: oklch(0.79 0.155 75);
-  --chart-5: oklch(0.58 0.21 25.5);
-  --sidebar: oklch(0.3172 0.0472 178.5);
-  --sidebar-foreground: oklch(0.88 0.03 168);
-  --sidebar-primary: oklch(0.7726 0.1712 163.2);
-  --sidebar-primary-foreground: oklch(0.24 0.045 178.5);
-  --sidebar-accent: oklch(0.38 0.052 178);
-  --sidebar-accent-foreground: oklch(0.98 0.014 165);
-  --sidebar-border: oklch(0.38 0.052 178);
-  --sidebar-ring: oklch(0.7726 0.1712 163.2);
+  /* Global Canvas & Layouts */
+  --background: #0E1119;
+  --foreground: #F8FAFC;
+  --card: #161B26;
+  --card-foreground: #F8FAFC;
+  --popover: #161B26;
+  --popover-foreground: #F8FAFC;
+  --secondary: #1F2637;
+  --secondary-foreground: #F8FAFC;
+  --muted: #1A2130;
+  --muted-foreground: #8A94A6;
+  --accent: rgba(8, 71, 247, 0.12);
+  --accent-foreground: #FFFFFF;
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+  --warning: #F5A623;
+  --warning-foreground: #0E1119;
+  --teal: #F8FAFC;
+  --teal-foreground: #0E1119;
+  --mint: #00B171;
+  --mint-tint: #1A2130;
+  --border: #2A3347;
+  --input: #2A3347;
+  --ring: #0847F7;
+  --chart-1: #0847F7;
+  --chart-2: #8A94A6;
+  --chart-3: #38BDF8;
+  --chart-4: #F5A623;
+  --chart-5: #EF4444;
+
+  /* Sidebar Tokens */
+  --sidebar: #0E1119;
+  --sidebar-foreground: #8A94A6;
+  --sidebar-primary: #0847F7;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: rgba(8, 71, 247, 0.12);
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: #2A3347;
+  --sidebar-ring: #0847F7;
 }
 
 .dark {
-  --background: oklch(0.22 0.04 178.5);
-  --foreground: oklch(0.96 0.014 165);
-  --card: oklch(0.27 0.043 178.5);
-  --card-foreground: oklch(0.96 0.014 165);
-  --popover: oklch(0.27 0.043 178.5);
-  --popover-foreground: oklch(0.96 0.014 165);
-  --primary: oklch(0.7726 0.1712 163.2);
-  --primary-foreground: oklch(0.22 0.04 178.5);
-  --secondary: oklch(0.32 0.045 178.5);
-  --secondary-foreground: oklch(0.96 0.014 165);
-  --muted: oklch(0.32 0.045 178.5);
-  --muted-foreground: oklch(0.74 0.03 168);
-  --accent: oklch(0.36 0.05 175);
-  --accent-foreground: oklch(0.96 0.014 165);
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 16%);
-  --ring: oklch(0.7726 0.1712 163.2);
+  --background: #0E1119;
+  --foreground: #F8FAFC;
+  --card: #161B26;
+  --card-foreground: #F8FAFC;
+  --popover: #161B26;
+  --popover-foreground: #F8FAFC;
+  --primary: #0847F7;
+  --primary-foreground: #FFFFFF;
+  --secondary: #1F2637;
+  --secondary-foreground: #F8FAFC;
+  --muted: #1A2130;
+  --muted-foreground: #8A94A6;
+  --accent: rgba(8, 71, 247, 0.12);
+  --accent-foreground: #FFFFFF;
+  --border: #2A3347;
+  --input: #2A3347;
+  --ring: #0847F7;
 }
 
 @layer base {
@@ -142,7 +152,7 @@
   h1,
   h2,
   h3 {
-    color: var(--color-teal);
+    color: var(--color-foreground);
     letter-spacing: -0.02em;
   }
 }
@@ -153,10 +163,11 @@
   line-height: 1.05;
   font-weight: 600;
   letter-spacing: -0.03em;
-  color: var(--color-teal);
+  color: var(--color-foreground);
 }
 
 .tabular {
   font-variant-numeric: tabular-nums;
   font-family: var(--font-mono);
 }
+
