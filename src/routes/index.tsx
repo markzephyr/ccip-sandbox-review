@@ -3,6 +3,9 @@ import {
   AlertCircle,
   ArrowRight,
   Check,
+  ChevronDown,
+  ChevronUp,
+  Code2,
   ExternalLink,
   Fuel,
   Lock,
@@ -75,6 +78,7 @@ function LedgerPage() {
     useApexDualRail();
   const chainlinkFeed = useChainlinkFeed();
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [showInspector, setShowInspector] = useState<boolean>(false);
 
   // Filter & Search states
   const [searchQuery, setSearchQuery] = useState("");
@@ -163,7 +167,17 @@ function LedgerPage() {
       isFetching={ledger.isFetching}
     >
       {/* Real On-Chain Chainlink Testnet Feed Banner */}
-      <div className="mb-5 rounded-xl border border-[#0847F7]/40 bg-gradient-to-r from-[#161B26] via-[#121A2A] to-[#161B26] p-4 shadow-panel">
+      <div
+        data-testid="chainlink-oracle-feed"
+        data-contract="0x694AA1769357215DE4FAC081bf1f309aDC325306"
+        data-round-id={chainlinkFeed.data?.roundId}
+        data-raw-answer={chainlinkFeed.data?.rawAnswer}
+        data-updated-at={chainlinkFeed.data?.updatedAt?.toISOString()}
+        data-started-at={chainlinkFeed.data?.startedAt?.toISOString()}
+        data-answered-in-round={chainlinkFeed.data?.answeredInRound}
+        data-derived-price={chainlinkFeed.data?.price}
+        className="mb-5 rounded-xl border border-[#0847F7]/40 bg-gradient-to-r from-[#161B26] via-[#121A2A] to-[#161B26] p-4 shadow-panel"
+      >
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-start sm:items-center gap-3.5">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#0847F7]/40 bg-[#0847F7]/15 text-[#0847F7]">
@@ -230,7 +244,7 @@ function LedgerPage() {
               </p>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Button
                 variant="outline"
                 size="sm"
@@ -250,6 +264,21 @@ function LedgerPage() {
                 />
                 {chainlinkFeed.isLoading ? "Reading..." : "Refresh Feed"}
               </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowInspector(!showInspector)}
+                className="h-8 border border-[#0847F7]/30 bg-[#0847F7]/10 text-xs text-[#7DD3FC] hover:bg-[#0847F7]/20 hover:text-white"
+                title="Inspect raw Solidity latestRoundData() return values"
+              >
+                <Code2 className="h-3.5 w-3.5 mr-1 text-[#0847F7]" />
+                {showInspector ? "Hide Payload" : "Inspect On-Chain Payload"}
+                {showInspector ? (
+                  <ChevronUp className="h-3 w-3 ml-1" />
+                ) : (
+                  <ChevronDown className="h-3 w-3 ml-1" />
+                )}
+              </Button>
               <a
                 href="https://sepolia.etherscan.io/address/0x694AA1769357215DE4FAC081bf1f309aDC325306"
                 target="_blank"
@@ -262,6 +291,73 @@ function LedgerPage() {
             </div>
           </div>
         </div>
+
+        {/* Interactive Solidity Tuple Inspector (Developer & Reviewer Verification) */}
+        {showInspector && (
+          <div className="mt-4 rounded-lg border border-[#2A3347] bg-[#0E1119] p-4 text-xs font-mono animate-in fade-in-50 duration-150">
+            <div className="flex items-center justify-between pb-2 border-b border-[#2A3347] mb-3 text-muted-foreground">
+              <span className="flex items-center gap-1.5 text-white font-semibold">
+                <Code2 className="h-4 w-4 text-[#0847F7]" />
+                AggregatorV3Interface.latestRoundData() &mdash; Live Sepolia Response
+              </span>
+              <span className="text-[10px] text-[#00B171] font-semibold">
+                ON-CHAIN VERIFIED TUPLE
+              </span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-[11px]">
+              <div className="rounded border border-[#2A3347]/60 bg-[#161B26] p-2.5">
+                <p className="text-[10px] text-muted-foreground uppercase">uint80 roundId</p>
+                <p className="text-white font-semibold mt-0.5 break-all">
+                  {chainlinkFeed.data?.roundId || "Loading..."}
+                </p>
+              </div>
+              <div className="rounded border border-[#2A3347]/60 bg-[#161B26] p-2.5">
+                <p className="text-[10px] text-muted-foreground uppercase">int256 answer</p>
+                <p className="text-[#00B171] font-semibold mt-0.5 break-all">
+                  {chainlinkFeed.data?.rawAnswer || "Loading..."}
+                </p>
+              </div>
+              <div className="rounded border border-[#2A3347]/60 bg-[#161B26] p-2.5">
+                <p className="text-[10px] text-muted-foreground uppercase">uint256 startedAt</p>
+                <p className="text-white mt-0.5">
+                  {chainlinkFeed.data?.startedAt
+                    ? `${Math.floor(chainlinkFeed.data.startedAt.getTime() / 1000)} (${chainlinkFeed.data.startedAt.toLocaleTimeString()})`
+                    : "—"}
+                </p>
+              </div>
+              <div className="rounded border border-[#2A3347]/60 bg-[#161B26] p-2.5">
+                <p className="text-[10px] text-muted-foreground uppercase">uint256 updatedAt</p>
+                <p className="text-white mt-0.5">
+                  {chainlinkFeed.data?.updatedAt
+                    ? `${Math.floor(chainlinkFeed.data.updatedAt.getTime() / 1000)} (${chainlinkFeed.data.updatedAt.toLocaleTimeString()})`
+                    : "—"}
+                </p>
+              </div>
+              <div className="rounded border border-[#2A3347]/60 bg-[#161B26] p-2.5">
+                <p className="text-[10px] text-muted-foreground uppercase">uint80 answeredInRound</p>
+                <p className="text-white mt-0.5 break-all">
+                  {chainlinkFeed.data?.answeredInRound || "—"}
+                </p>
+              </div>
+              <div className="rounded border border-[#2A3347]/60 bg-[#161B26] p-2.5">
+                <p className="text-[10px] text-muted-foreground uppercase">uint8 decimals</p>
+                <p className="text-white mt-0.5">{chainlinkFeed.data?.decimals ?? 8}</p>
+              </div>
+            </div>
+            <div className="mt-3 pt-2.5 border-t border-[#2A3347] flex flex-wrap items-center justify-between gap-2 text-[10px]">
+              <span className="text-muted-foreground">
+                Derivation Math:{" "}
+                <span className="text-[#7DD3FC] font-semibold">
+                  {chainlinkFeed.data?.mathFormula}
+                </span>
+              </span>
+              <span className="text-muted-foreground">
+                Contract:{" "}
+                <span className="text-white font-mono">0x694AA1769357215DE4FAC081bf1f309aDC325306</span>
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Advanced Filter Toolbar */}

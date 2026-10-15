@@ -58,16 +58,26 @@ const client = createPublicClient({
 });
 
 export interface ChainlinkFeedData {
-  /** Human-readable price, e.g. "2423.54" */
+  /** Human-readable price, e.g. "2,423.54" */
   price: string;
+  /** Raw int256 answer from latestRoundData(), e.g. "242354000000" */
+  rawAnswer: string;
   /** Feed pair label from on-chain, e.g. "ETH / USD" */
   pair: string;
   /** When the feed was last updated on-chain (Date object) */
   updatedAt: Date;
-  /** The Aggregator round ID */
+  /** When the round started on-chain (Date object) */
+  startedAt: Date;
+  /** The Aggregator uint80 round ID as string */
   roundId: string;
-  /** Number of decimals used */
+  /** The uint80 answeredInRound as string */
+  answeredInRound: string;
+  /** Number of decimals used (8 for USD feeds) */
   decimals: number;
+  /** Contract address on Sepolia */
+  contractAddress: string;
+  /** Human-readable math derivation formula */
+  mathFormula: string;
 }
 
 export interface UseChainlinkFeedResult {
@@ -136,18 +146,25 @@ export function useChainlinkFeed(): UseChainlinkFeedResult {
 
         if (cancelled) return;
 
-        const [roundId, answer, , updatedAt] = roundData;
-        const price = formatUnits(answer, decimals);
+        // Exactly the 5 variables returned by Solidity AggregatorV3Interface.latestRoundData()
+        const [roundId, answer, startedAt, updatedAt, answeredInRound] = roundData;
+        const formattedUnits = formatUnits(answer, decimals);
+        const numericPrice = Number(formattedUnits);
 
         setData({
-          price: Number(price).toLocaleString("en-US", {
+          price: numericPrice.toLocaleString("en-US", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           }),
+          rawAnswer: answer.toString(),
           pair: description,
+          startedAt: new Date(Number(startedAt) * 1000),
           updatedAt: new Date(Number(updatedAt) * 1000),
           roundId: roundId.toString(),
+          answeredInRound: answeredInRound.toString(),
           decimals,
+          contractAddress: FEED_ADDRESS,
+          mathFormula: `answer (${answer.toString()}) / 10^${decimals} = $${numericPrice.toFixed(2)}`,
         });
         const now = new Date();
         setLastFetchedAt(now);
