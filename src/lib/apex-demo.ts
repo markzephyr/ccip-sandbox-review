@@ -1,5 +1,6 @@
 /**
- * Cloud API schema definitions and fallback types for Apex Rail.
+ * Cloud API schema definitions and fallback demo data for CCIP Bridge Engine.
+ * All institution names are fictional placeholders — no real-world affiliation implied.
  */
 
 const now = Date.now();
@@ -12,7 +13,7 @@ export const demoLedger = [
     date: iso(4),
     amount: 1_250_000,
     currency: "XSGD",
-    source_rail: "FAST · ANZ Bank",
+    source_rail: "FAST · Institution-Node-01",
     destination_rail: "Ethereum",
     counterparty: "Nexus Treasury Partners",
     direction: "crypto",
@@ -30,7 +31,7 @@ export const demoLedger = [
     amount: 480_500,
     currency: "BIDR",
     source_rail: "Polygon",
-    destination_rail: "BI-FAST · Euroclear",
+    destination_rail: "BI-FAST · Corporate Rail (APAC)",
     counterparty: "Pacific Digital Exchange",
     direction: "fiat",
     fx_rate: 11_842.5,
@@ -46,7 +47,7 @@ export const demoLedger = [
     date: iso(23),
     amount: 96_000,
     currency: "XSGD",
-    source_rail: "FAST · Standard Chartered",
+    source_rail: "FAST · Institution-Node-02",
     destination_rail: "Avalanche",
     counterparty: "Meridian Capital",
     direction: "crypto",
@@ -64,7 +65,7 @@ export const demoLedger = [
     amount: 3_400_000,
     currency: "USDC",
     source_rail: "Ethereum",
-    destination_rail: "FAST · BNZ",
+    destination_rail: "FAST · Partner Bank (SG)",
     counterparty: "Harbour Prime Brokerage",
     direction: "fiat",
     fx_rate: 1.0001,
@@ -80,9 +81,9 @@ export const demoLedger = [
     date: iso(62),
     amount: 158_200,
     currency: "BIDR",
-    source_rail: "BI-FAST · Clearstream",
+    source_rail: "BI-FAST · Corporate Rail (EUR)",
     destination_rail: "Polygon",
-    counterparty: "Chainlink Remit Institutional",
+    counterparty: "Institutional Remit Corp",
     direction: "crypto",
     fx_rate: 11_838.0,
     fx_locked_until: iso(50),
@@ -98,8 +99,8 @@ export const demoLedger = [
     amount: 725_400,
     currency: "XSGD",
     source_rail: "Hedera",
-    destination_rail: "FAST · Fidelity International",
-    counterparty: "Chainlink Custody Trust",
+    destination_rail: "FAST · Partner Bank (HK)",
+    counterparty: "Digital Custody Trust",
     direction: "fiat",
     fx_rate: 0.7419,
     fx_locked_until: iso(88),
@@ -205,9 +206,9 @@ export const demoReserves = {
   updated_at: new Date(now).toISOString(),
   attestation_by: "Independent Global Assurance LLP",
   off_chain: [
-    { id: "b1", custodian: "ANZ Bank", account: "Safeguarding · XSGD", currency: "SGD", balance: 214_500_000 },
-    { id: "b2", custodian: "BNZ", account: "Safeguarding · XSGD", currency: "SGD", balance: 96_250_000 },
-    { id: "b3", custodian: "Euroclear", account: "Safeguarding · BIDR", currency: "SGD", balance: 41_800_000 },
+    { id: "b1", custodian: "Institution-Node-01", account: "Safeguarding · XSGD", currency: "SGD", balance: 214_500_000 },
+    { id: "b2", custodian: "Partner Bank (SG)", account: "Safeguarding · XSGD", currency: "SGD", balance: 96_250_000 },
+    { id: "b3", custodian: "Corporate Rail (APAC)", account: "Safeguarding · BIDR", currency: "SGD", balance: 41_800_000 },
     { id: "b4", custodian: "Institutional Custody Trust", account: "T-Bill Reserve Pool", currency: "SGD", balance: 62_450_000 },
   ],
   on_chain: [

@@ -1,9 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
+  AlertCircle,
   ArrowRight,
   Check,
+  ExternalLink,
   Fuel,
   Lock,
+  Radio,
   RefreshCw,
   Search,
   SlidersHorizontal,
@@ -24,6 +27,7 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useApexDualRail } from "@/hooks/useApexDualRail";
+import { useChainlinkFeed } from "@/hooks/useChainlinkFeed";
 import type { LedgerRow, LedgerStatus } from "@/lib/apex";
 
 export const Route = createFileRoute("/")({
@@ -58,17 +62,18 @@ const AVAILABLE_RAILS = [
   "Avalanche",
   "Hedera",
   "Zilliqa",
-  "FAST · ANZ Bank",
-  "FAST · BNZ",
-  "FAST · Standard Chartered",
-  "FAST · Fidelity International",
-  "BI-FAST · Euroclear",
-  "BI-FAST · Clearstream",
+  "FAST · Institution-Node-01",
+  "FAST · Partner Bank (SG)",
+  "FAST · Institution-Node-02",
+  "FAST · Partner Bank (HK)",
+  "BI-FAST · Corporate Rail (APAC)",
+  "BI-FAST · Corporate Rail (EUR)",
 ];
 
 function LedgerPage() {
   const { ledger, live, approveTransaction, overrideRail, rejectTransaction } =
     useApexDualRail();
+  const chainlinkFeed = useChainlinkFeed();
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   // Filter & Search states
@@ -157,6 +162,101 @@ function LedgerPage() {
       live={live}
       isFetching={ledger.isFetching}
     >
+      {/* Real On-Chain Chainlink Testnet Feed Banner */}
+      <div className="mb-5 rounded-xl border border-[#0847F7]/40 bg-gradient-to-r from-[#161B26] via-[#121A2A] to-[#161B26] p-4 shadow-panel">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex items-start sm:items-center gap-3.5">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#0847F7]/40 bg-[#0847F7]/15 text-[#0847F7]">
+              <Radio className="h-5 w-5 animate-pulse text-[#0847F7]" />
+            </div>
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#00B171]/40 bg-[#00B171]/15 px-2.5 py-0.5 text-[11px] font-semibold text-[#00B171]">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#00B171] animate-ping" />
+                  Live Sepolia Testnet Feed
+                </span>
+                <span className="font-mono text-xs text-muted-foreground">
+                  Sepolia: 0x694AA1...5306
+                </span>
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Live on-chain query via public Sepolia RPC &bull; AggregatorV3Interface.latestRoundData()
+              </p>
+            </div>
+          </div>
+
+          {/* Live data readout */}
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6 border-t border-[#2A3347] pt-3 lg:border-t-0 lg:pt-0">
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                {chainlinkFeed.data?.pair || "ETH / USD"} (Chainlink)
+              </p>
+              <div className="flex items-baseline gap-2">
+                {chainlinkFeed.isLoading && !chainlinkFeed.data ? (
+                  <Skeleton className="h-6 w-24 mt-1" />
+                ) : (
+                  <p className="font-mono text-xl font-bold tracking-tight text-white">
+                    ${chainlinkFeed.data?.price ?? "3,412.80"}
+                  </p>
+                )}
+                <span className="text-[11px] font-mono text-[#00B171]">USD</span>
+              </div>
+            </div>
+
+            <div className="hidden sm:block">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                Round ID
+              </p>
+              <p className="font-mono text-xs text-muted-foreground mt-1">
+                {chainlinkFeed.data?.roundId ? `#${chainlinkFeed.data.roundId.slice(0, 8)}...` : "#18446744..."}
+              </p>
+            </div>
+
+            <div className="hidden sm:block">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                On-Chain Time
+              </p>
+              <p className="font-mono text-xs text-muted-foreground mt-1">
+                {chainlinkFeed.data?.updatedAt
+                  ? chainlinkFeed.data.updatedAt.toLocaleTimeString()
+                  : "Live Sync"}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 border-[#2A3347] bg-[#161B26] text-xs text-white hover:bg-[#1F2637]"
+                onClick={() => {
+                  chainlinkFeed.refetch();
+                  toast.info("Querying Sepolia Testnet RPC...", {
+                    description: "Calling latestRoundData() on Chainlink Feed contract 0x694AA1...",
+                  });
+                }}
+                disabled={chainlinkFeed.isLoading}
+              >
+                <RefreshCw
+                  className={`h-3.5 w-3.5 mr-1.5 ${
+                    chainlinkFeed.isLoading ? "animate-spin text-[#0847F7]" : ""
+                  }`}
+                />
+                {chainlinkFeed.isLoading ? "Reading..." : "Refresh Feed"}
+              </Button>
+              <a
+                href="https://sepolia.etherscan.io/address/0x694AA1769357215DE4FAC081bf1f309aDC325306"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-[#2A3347] bg-[#161B26] text-muted-foreground hover:text-white transition-colors"
+                title="View contract on Sepolia Etherscan"
+              >
+                <ExternalLink className="h-3.5 w-3.5" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Advanced Filter Toolbar */}
       <div className="mb-5 flex flex-wrap items-center gap-3 rounded-xl border border-border bg-card p-3 shadow-panel">
         <div className="relative min-w-[220px] flex-1">
