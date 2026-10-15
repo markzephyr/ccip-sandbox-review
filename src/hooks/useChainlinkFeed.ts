@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createPublicClient, http, formatUnits } from "viem";
+import { createPublicClient, fallback, http, formatUnits } from "viem";
 import { sepolia } from "viem/chains";
 
 /**
@@ -46,13 +46,19 @@ const AGGREGATOR_ABI = [
   },
 ] as const;
 
+// Resilient multi-RPC client using fallback transports
 const client = createPublicClient({
   chain: sepolia,
-  transport: http("https://ethereum-sepolia-rpc.publicnode.com"),
+  transport: fallback([
+    http("https://ethereum-sepolia-rpc.publicnode.com"),
+    http("https://rpc.sepolia.org"),
+    http("https://1rpc.io/sepolia"),
+    http("https://sepolia.drpc.org"),
+  ]),
 });
 
 export interface ChainlinkFeedData {
-  /** Human-readable price, e.g. "3421.12" */
+  /** Human-readable price, e.g. "2423.54" */
   price: string;
   /** Feed pair label from on-chain, e.g. "ETH / USD" */
   pair: string;
@@ -69,20 +75,39 @@ export interface UseChainlinkFeedResult {
   isLoading: boolean;
   error: string | null;
   lastFetchedAt: Date | null;
+  /** Ticking seconds since last successful RPC fetch */
+  secondsAgo: number;
+  /** Countdown in seconds until the next automatic RPC poll */
+  nextPollIn: number;
   refetch: () => void;
 }
 
-const REFETCH_INTERVAL_MS = 30_000; // poll every 30s
+const REFETCH_INTERVAL_SEC = 15; // poll RPC every 15 seconds
 
 export function useChainlinkFeed(): UseChainlinkFeedResult {
   const [data, setData] = useState<ChainlinkFeedData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastFetchedAt, setLastFetchedAt] = useState<Date | null>(null);
+  const [secondsAgo, setSecondsAgo] = useState(0);
+  const [nextPollIn, setNextPollIn] = useState(REFETCH_INTERVAL_SEC);
   const [tick, setTick] = useState(0);
 
-  const refetch = () => setTick((t) => t + 1);
+  const refetch = () => {
+    setNextPollIn(REFETCH_INTERVAL_SEC);
+    setTick((t) => t + 1);
+  };
 
+  // Active 1-second ticker for live UI feedback
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSecondsAgo((prev) => prev + 1);
+      setNextPollIn((prev) => (prev > 1 ? prev - 1 : REFETCH_INTERVAL_SEC));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Main polling effect
   useEffect(() => {
     let cancelled = false;
 
@@ -124,7 +149,10 @@ export function useChainlinkFeed(): UseChainlinkFeedResult {
           roundId: roundId.toString(),
           decimals,
         });
-        setLastFetchedAt(new Date());
+        const now = new Date();
+        setLastFetchedAt(now);
+        setSecondsAgo(0);
+        setNextPollIn(REFETCH_INTERVAL_SEC);
       } catch (err) {
         if (cancelled) return;
         setError(err instanceof Error ? err.message : "Failed to fetch Chainlink feed");
@@ -135,12 +163,15 @@ export function useChainlinkFeed(): UseChainlinkFeedResult {
 
     fetchFeed();
 
-    const interval = setInterval(fetchFeed, REFETCH_INTERVAL_MS);
+    const interval = setInterval(() => {
+      fetchFeed();
+    }, REFETCH_INTERVAL_SEC * 1000);
+
     return () => {
       cancelled = true;
       clearInterval(interval);
     };
   }, [tick]);
 
-  return { data, isLoading, error, lastFetchedAt, refetch };
+  return { data, isLoading, error, lastFetchedAt, secondsAgo, nextPollIn, refetch };
 }

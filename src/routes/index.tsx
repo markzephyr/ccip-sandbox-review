@@ -178,9 +178,13 @@ function LedgerPage() {
                 <span className="font-mono text-xs text-muted-foreground">
                   Sepolia: 0x694AA1...5306
                 </span>
+                <span className="inline-flex items-center gap-1 rounded border border-[#0847F7]/30 bg-[#0847F7]/15 px-2 py-0.5 font-mono text-[10px] text-[#7DD3FC]">
+                  <span className="h-1 w-1 rounded-full bg-[#0847F7] animate-pulse" />
+                  Polled {chainlinkFeed.secondsAgo}s ago &bull; Next in {chainlinkFeed.nextPollIn}s
+                </span>
               </div>
               <p className="mt-1 text-xs text-muted-foreground">
-                Live on-chain query via public Sepolia RPC &bull; AggregatorV3Interface.latestRoundData()
+                Continuous RPC sync via public Sepolia testnet nodes &bull; AggregatorV3Interface.latestRoundData()
               </p>
             </div>
           </div>
@@ -196,7 +200,7 @@ function LedgerPage() {
                   <Skeleton className="h-6 w-24 mt-1" />
                 ) : (
                   <p className="font-mono text-xl font-bold tracking-tight text-white">
-                    ${chainlinkFeed.data?.price ?? "3,412.80"}
+                    ${chainlinkFeed.data?.price ?? "—"}
                   </p>
                 )}
                 <span className="text-[11px] font-mono text-[#00B171]">USD</span>
@@ -208,18 +212,21 @@ function LedgerPage() {
                 Round ID
               </p>
               <p className="font-mono text-xs text-muted-foreground mt-1">
-                {chainlinkFeed.data?.roundId ? `#${chainlinkFeed.data.roundId.slice(0, 8)}...` : "#18446744..."}
+                {chainlinkFeed.data?.roundId ? `#${chainlinkFeed.data.roundId.slice(0, 8)}...` : "—"}
               </p>
             </div>
 
             <div className="hidden sm:block">
               <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                On-Chain Time
+                Oracle Block Time
               </p>
               <p className="font-mono text-xs text-muted-foreground mt-1">
                 {chainlinkFeed.data?.updatedAt
                   ? chainlinkFeed.data.updatedAt.toLocaleTimeString()
                   : "Live Sync"}
+              </p>
+              <p className="text-[9px] text-muted-foreground/60 leading-none mt-0.5">
+                New block on &ge;0.5% move
               </p>
             </div>
 
