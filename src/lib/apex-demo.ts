@@ -204,7 +204,41 @@ export const demoRails = [
 
 export const demoReserves = {
   updated_at: new Date(now).toISOString(),
-  attestation_by: "Independent Global Assurance LLP",
+  attestation_by: "Example Assurance Firm",
+  attestation: {
+    auditor_name: "Example Assurance Firm",
+    auditor_license_id: "EXAMPLE-0000",
+    methodology: "Example agreed-upon procedures (simulated)",
+    report_hash: "0x0000000000000000000000000000000000000000000000000000000000000000",
+    certification_status: "verified",
+    scope_summary: "Simulated 1:1 reserve verification across example custodial accounts and example on-chain token contracts.",
+    engagement_period_start: new Date(now - 90 * 86_400_000).toISOString(),
+    engagement_period_end: new Date(now).toISOString(),
+    next_scheduled_audit: new Date(now + 90 * 86_400_000).toISOString(),
+    report_url: "#",
+    signed_by: "J. Doe, Example Signing Partner",
+    signed_at: new Date(now - 2 * 3_600_000).toISOString(),
+    findings: [
+      {
+        id: "FND-001",
+        severity: "low",
+        title: "Example finding — minor timestamp drift between mock custodian API and internal clock",
+        status: "resolved",
+      },
+      {
+        id: "FND-002",
+        severity: "info",
+        title: "Example finding — gas cost rounding to 4 decimal places, no material impact",
+        status: "resolved",
+      },
+      {
+        id: "FND-003",
+        severity: "medium",
+        title: "Example finding — intermittent 502 on simulated rail during attestation window",
+        status: "resolved",
+      },
+    ],
+  },
   off_chain: [
     { id: "b1", custodian: "Institution-Node-01", account: "Safeguarding · XSGD", currency: "SGD", balance: 214_500_000 },
     { id: "b2", custodian: "Partner Bank (SG)", account: "Safeguarding · XSGD", currency: "SGD", balance: 96_250_000 },

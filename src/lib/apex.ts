@@ -33,6 +33,27 @@ export interface RailHealth {
   lastIncident: string | null;
 }
 
+export interface AttestationReport {
+  auditorName: string;
+  auditorLicenseId: string;
+  methodology: string;
+  reportHash: string;
+  certificationStatus: "verified" | "pending_review" | "expired" | "revoked";
+  scopeSummary: string;
+  engagementPeriodStart: string;
+  engagementPeriodEnd: string;
+  nextScheduledAudit: string;
+  reportUrl: string;
+  signedBy: string;
+  signedAt: string;
+  findings: Array<{
+    id: string;
+    severity: "info" | "low" | "medium" | "high" | "critical";
+    title: string;
+    status: "resolved" | "open" | "acknowledged";
+  }>;
+}
+
 export interface ReserveSnapshot {
   updatedAt: string;
   offChain: Array<{
@@ -52,6 +73,7 @@ export interface ReserveSnapshot {
   totalOnChain: number;
   collateralizationRatio: number;
   attestationBy: string;
+  attestation?: AttestationReport;
 }
 
 /* ------------------------------------------------------------------ */
@@ -185,6 +207,41 @@ export function normalizeReserves(raw: unknown): ReserveSnapshot {
   );
   if (ratio > 0 && ratio <= 2) ratio *= 100;
 
+  const attestationRaw = asDict(pick(r, "attestation", "attestation_report") ?? {});
+  const hasAttestationData = Object.keys(attestationRaw).length > 0;
+  const findingsRaw = asArray(pick(attestationRaw, "findings", "audit_findings"));
+  const SEVERITIES = ["info", "low", "medium", "high", "critical"] as const;
+  const FINDING_STATUSES = ["resolved", "open", "acknowledged"] as const;
+  const CERT_STATUSES = ["verified", "pending_review", "expired", "revoked"] as const;
+
+  const certStatus = str(pick(attestationRaw, "certification_status", "certificationStatus"), "verified").toLowerCase();
+
+  const attestation: AttestationReport | undefined = hasAttestationData ? {
+    auditorName: str(pick(attestationRaw, "auditor_name", "auditorName"), "Example Assurance Firm"),
+    auditorLicenseId: str(pick(attestationRaw, "auditor_license_id", "auditorLicenseId"), "EXAMPLE-0000"),
+    methodology: str(pick(attestationRaw, "methodology"), "Example agreed-upon procedures"),
+    reportHash: str(pick(attestationRaw, "report_hash", "reportHash"), "0x0000…0000"),
+    certificationStatus: (CERT_STATUSES.includes(certStatus as typeof CERT_STATUSES[number]) ? certStatus : "verified") as AttestationReport["certificationStatus"],
+    scopeSummary: str(pick(attestationRaw, "scope_summary", "scopeSummary"), "Example scope description"),
+    engagementPeriodStart: str(pick(attestationRaw, "engagement_period_start", "engagementPeriodStart"), ""),
+    engagementPeriodEnd: str(pick(attestationRaw, "engagement_period_end", "engagementPeriodEnd"), ""),
+    nextScheduledAudit: str(pick(attestationRaw, "next_scheduled_audit", "nextScheduledAudit"), ""),
+    reportUrl: str(pick(attestationRaw, "report_url", "reportUrl"), "#"),
+    signedBy: str(pick(attestationRaw, "signed_by", "signedBy"), "Example Signing Partner"),
+    signedAt: str(pick(attestationRaw, "signed_at", "signedAt"), ""),
+    findings: findingsRaw.map((f, i) => {
+      const fd = asDict(f);
+      const sev = str(pick(fd, "severity"), "info").toLowerCase();
+      const fStatus = str(pick(fd, "status"), "resolved").toLowerCase();
+      return {
+        id: str(pick(fd, "id"), `FND-${i + 1}`),
+        severity: (SEVERITIES.includes(sev as typeof SEVERITIES[number]) ? sev : "info") as AttestationReport["findings"][number]["severity"],
+        title: str(pick(fd, "title", "description"), "Example finding"),
+        status: (FINDING_STATUSES.includes(fStatus as typeof FINDING_STATUSES[number]) ? fStatus : "resolved") as AttestationReport["findings"][number]["status"],
+      };
+    }),
+  } : undefined;
+
   return {
     updatedAt: str(pick(r, "updated_at", "updatedAt", "timestamp"), new Date().toISOString()),
     offChain,
@@ -192,7 +249,8 @@ export function normalizeReserves(raw: unknown): ReserveSnapshot {
     totalOffChain,
     totalOnChain,
     collateralizationRatio: ratio,
-    attestationBy: str(pick(r, "attestation_by", "attestationBy", "auditor"), "Independent auditor"),
+    attestationBy: str(pick(r, "attestation_by", "attestationBy", "auditor"), attestation?.auditorName ?? "Independent auditor"),
+    ...(attestation ? { attestation } : {}),
   };
 }
 

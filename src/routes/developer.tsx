@@ -61,6 +61,7 @@ export interface ReserveSnapshot {
   totalOnChain: number;            // total_on_chain
   collateralizationRatio: number;  // collateralization_ratio
   attestationBy: string;
+  attestation?: AttestationReport; // optional simulated attestation data
 }`,
   },
   {

@@ -1,14 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Activity,
+  AlertCircle,
   ArrowUpRight,
   Banknote,
+  Check,
+  ChevronDown,
+  ChevronUp,
+  Clock,
   Coins,
+  FileText,
+  Hash,
   ShieldAlert,
   ShieldCheck,
   TrendingUp,
+  UserCheck,
 } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -49,8 +57,10 @@ export const Route = createFileRoute("/reserves")({
 function ReservesPage() {
   const { reserves, live } = useApexDualRail();
   const snap = reserves.data;
+  const attestation = snap.attestation;
   const delta = snap.totalOffChain - snap.totalOnChain;
   const balanced = Math.abs(snap.collateralizationRatio - 100) < 0.01;
+  const [showAttestation, setShowAttestation] = useState(false);
 
   // Dynamic trend data
   const historicalTrend = useMemo(() => {
@@ -157,6 +167,263 @@ function ReservesPage() {
           />
         </div>
       </div>
+
+      {/* ── Reserve Attestation Audit Panel (Simulated) ── */}
+      {attestation ? (
+        <div className="mt-6 rounded-xl border border-border bg-card shadow-panel overflow-hidden">
+          {/* Attestation Header */}
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border bg-gradient-to-r from-[#161B26] via-[#121A2A] to-[#161B26] px-6 py-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#00B171]/40 bg-[#00B171]/15">
+                <ShieldCheck className="h-5 w-5 text-[#00B171]" />
+              </div>
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <h3 className="text-sm font-semibold text-white">Simulated attestation data</h3>
+                  <span className="rounded bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 text-[10px] font-medium text-amber-400">
+                    Simulation Only
+                  </span>
+                  <span
+                    className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${
+                      attestation.certificationStatus === "verified"
+                        ? "border-[#00B171]/40 bg-[#00B171]/15 text-[#00B171]"
+                        : attestation.certificationStatus === "pending_review"
+                        ? "border-[#F5A623]/40 bg-[#F5A623]/15 text-[#F5A623]"
+                        : "border-[#EF4444]/40 bg-[#EF4444]/15 text-[#EF4444]"
+                    }`}
+                  >
+                    <span
+                      className={`h-1.5 w-1.5 rounded-full ${
+                        attestation.certificationStatus === "verified"
+                          ? "bg-[#00B171] animate-ping"
+                          : attestation.certificationStatus === "pending_review"
+                          ? "bg-[#F5A623] animate-pulse"
+                          : "bg-[#EF4444]"
+                      }`}
+                    />
+                    {attestation.certificationStatus === "verified"
+                      ? "Verified"
+                      : attestation.certificationStatus === "pending_review"
+                      ? "Pending Review"
+                      : attestation.certificationStatus === "expired"
+                      ? "Expired"
+                      : "Revoked"}
+                  </span>
+                </div>
+                <p className="mt-0.5 text-[11px] text-muted-foreground">
+                  Simulated attestation data · {attestation.methodology}
+                </p>
+              </div>
+            </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowAttestation(!showAttestation)}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-[#2A3347] bg-[#161B26] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#1F2637]"
+            >
+              <FileText className="h-3.5 w-3.5 text-[#0847F7]" />
+              {showAttestation ? "Collapse Details" : "View Full Report"}
+              {showAttestation ? (
+                <ChevronUp className="h-3 w-3 ml-0.5" />
+              ) : (
+                <ChevronDown className="h-3 w-3 ml-0.5" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Attestation Summary Row (always visible) */}
+        <div className="grid grid-cols-2 gap-px bg-border sm:grid-cols-4">
+          {[
+            {
+              label: "Auditor",
+              value: attestation.auditorName,
+              sub: `License: ${attestation.auditorLicenseId}`,
+            },
+            {
+              label: "Report Hash (SHA-256)",
+              value: attestation.reportHash.length > 20 ? `${attestation.reportHash.slice(0, 10)}…${attestation.reportHash.slice(-8)}` : attestation.reportHash,
+              sub: "On-chain anchored",
+              mono: true,
+            },
+            {
+              label: "Engagement Period",
+              value: `${new Date(attestation.engagementPeriodStart).toLocaleDateString("en-SG", { day: "2-digit", month: "short" })} — ${new Date(attestation.engagementPeriodEnd).toLocaleDateString("en-SG", { day: "2-digit", month: "short", year: "numeric" })}`,
+              sub: `${Math.round((new Date(attestation.engagementPeriodEnd).getTime() - new Date(attestation.engagementPeriodStart).getTime()) / 86400000)} days`,
+            },
+            {
+              label: "Audit Findings",
+              value: `${attestation.findings.length} Total`,
+              sub: `${attestation.findings.filter((f) => f.status === "resolved").length} resolved · ${attestation.findings.filter((f) => f.status === "open").length} open`,
+            },
+          ].map((cell) => (
+            <div key={cell.label} className="bg-card px-5 py-3.5">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                {cell.label}
+              </p>
+              <p
+                className={`mt-1 text-[13px] font-medium text-white ${cell.mono ? "font-mono" : ""}`}
+              >
+                {cell.value}
+              </p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">{cell.sub}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Expanded Attestation Details */}
+        {showAttestation && (
+          <div className="animate-in fade-in-50 slide-in-from-top-2 duration-200">
+            {/* Detail Grid */}
+            <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                {
+                  icon: <ShieldCheck className="h-3.5 w-3.5 text-[#00B171]" />,
+                  label: "Methodology",
+                  value: attestation.methodology,
+                },
+                {
+                  icon: <Hash className="h-3.5 w-3.5 text-[#0847F7]" />,
+                  label: "Full Report Hash",
+                  value: attestation.reportHash,
+                  mono: true,
+                },
+                {
+                  icon: <Clock className="h-3.5 w-3.5 text-[#F5A623]" />,
+                  label: "Next Scheduled Audit",
+                  value: new Date(attestation.nextScheduledAudit).toLocaleDateString("en-SG", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                  }),
+                },
+                {
+                  icon: <UserCheck className="h-3.5 w-3.5 text-[#7DD3FC]" />,
+                  label: "Signed By",
+                  value: attestation.signedBy,
+                },
+                {
+                  icon: <Clock className="h-3.5 w-3.5 text-muted-foreground" />,
+                  label: "Signed At",
+                  value: attestation.signedAt
+                    ? new Date(attestation.signedAt).toLocaleString("en-SG")
+                    : "—",
+                },
+                {
+                  icon: <FileText className="h-3.5 w-3.5 text-[#0847F7]" />,
+                  label: "Scope",
+                  value: attestation.scopeSummary,
+                },
+              ].map((item) => (
+                <div key={item.label} className="bg-card px-5 py-3.5">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    {item.icon}
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                      {item.label}
+                    </p>
+                  </div>
+                  <p
+                    className={`text-[12px] leading-relaxed text-white/90 ${item.mono ? "font-mono break-all" : ""}`}
+                  >
+                    {item.value}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* Findings Table */}
+            {attestation.findings.length > 0 && (
+              <div className="border-t border-border">
+                <div className="flex items-center gap-2 px-5 py-3 bg-muted/30 border-b border-border">
+                  <AlertCircle className="h-3.5 w-3.5 text-[#F5A623]" />
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                    Audit Findings
+                  </p>
+                  <span className="ml-auto text-[10px] font-mono text-muted-foreground">
+                    {attestation.findings.length} finding
+                    {attestation.findings.length !== 1 ? "s" : ""}
+                  </span>
+                </div>
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/20 text-left">
+                      {["ID", "Severity", "Finding", "Status"].map((h) => (
+                        <th
+                          key={h}
+                          className="px-5 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground"
+                        >
+                          {h}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {attestation.findings.map((finding) => (
+                      <tr
+                        key={finding.id}
+                        className="border-b border-border last:border-0 hover:bg-[#1F2637]/30 transition-colors"
+                      >
+                        <td className="px-5 py-3 font-mono text-white font-medium">
+                          {finding.id}
+                        </td>
+                        <td className="px-5 py-3">
+                          <span
+                            className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-medium capitalize ${
+                              finding.severity === "critical"
+                                ? "bg-[#EF4444]/15 text-[#EF4444] border-[#EF4444]/30"
+                                : finding.severity === "high"
+                                ? "bg-[#F97316]/15 text-[#F97316] border-[#F97316]/30"
+                                : finding.severity === "medium"
+                                ? "bg-[#F5A623]/15 text-[#F5A623] border-[#F5A623]/30"
+                                : finding.severity === "low"
+                                ? "bg-[#0847F7]/15 text-[#7DD3FC] border-[#0847F7]/30"
+                                : "bg-[#8A94A6]/15 text-[#8A94A6] border-[#8A94A6]/30"
+                            }`}
+                          >
+                            <span
+                              className={`h-1.5 w-1.5 rounded-full ${
+                                finding.severity === "critical"
+                                  ? "bg-[#EF4444]"
+                                  : finding.severity === "high"
+                                  ? "bg-[#F97316]"
+                                  : finding.severity === "medium"
+                                  ? "bg-[#F5A623]"
+                                  : finding.severity === "low"
+                                  ? "bg-[#0847F7]"
+                                  : "bg-[#8A94A6]"
+                              }`}
+                            />
+                            {finding.severity}
+                          </span>
+                        </td>
+                        <td className="px-5 py-3 text-white/80 max-w-md">
+                          {finding.title}
+                        </td>
+                        <td className="px-5 py-3">
+                          <span
+                            className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-medium capitalize ${
+                              finding.status === "resolved"
+                                ? "bg-[#00B171]/15 text-[#00B171] border-[#00B171]/30"
+                                : finding.status === "open"
+                                ? "bg-[#EF4444]/15 text-[#EF4444] border-[#EF4444]/30"
+                                : "bg-[#F5A623]/15 text-[#F5A623] border-[#F5A623]/30"
+                            }`}
+                          >
+                            {finding.status === "resolved" && (
+                              <Check className="h-3 w-3" />
+                            )}
+                            {finding.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    ) : null}
 
       {/* Dynamic Compliance Recharts Section */}
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
