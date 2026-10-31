@@ -1,6 +1,7 @@
 {
   "name": "apex-rail",
   "version": "1.0.0",
+  "license": "UNLICENSED",
   "private": true,
   "sideEffects": false,
   "type": "module",
