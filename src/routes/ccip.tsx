@@ -369,8 +369,19 @@ export function CCIPPage() {
             <tbody>
               {messages.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-4 py-10 text-center text-xs text-muted-foreground">
-                    Querying destination OffRamp contracts for recent ExecutionStateChanged events...
+                  <td colSpan={5} className="px-6 py-10 text-center">
+                    <div className="flex flex-col items-center justify-center max-w-md mx-auto space-y-2">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-[#0847F7]/30 bg-[#0847F7]/10 px-3 py-1 text-xs font-medium text-[#7DD3FC]">
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#0847F7] animate-pulse" />
+                        Listening on 68 Registered CCIP OffRamps
+                      </span>
+                      <p className="text-xs text-white font-medium mt-2">
+                        No CCIP execution events emitted in the last 2,000 blocks
+                      </p>
+                      <p className="text-[11px] text-muted-foreground leading-relaxed">
+                        Public testnet message volume is intermittent. The listener is continuously polling destination OffRamp contracts for <code className="text-[#38BDF8]">ExecutionStateChanged</code> events in real time.
+                      </p>
+                    </div>
                   </td>
                 </tr>
               ) : (
