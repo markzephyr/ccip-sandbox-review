@@ -1,58 +1,66 @@
-# CCIP Bridge Engine & Dual-Rail Settlement Ledger (v1.0.0)
+# CCIP 2.0 Bridge Engine & Dual-Rail Settlement Sandbox
 
+[![Chainlink CCIP](https://img.shields.io/badge/Chainlink_CCIP-v2.0-375BD2?style=flat-square&logo=chainlink)](https://ccip.chain.link)
 [![Chainlink Sepolia Testnet](https://img.shields.io/badge/Chainlink_Sepolia-Live_Feed-0847F7?style=flat-square&logo=chainlink)](https://sepolia.etherscan.io/address/0x694AA1769357215DE4FAC081bf1f309aDC325306)
-[![Version](https://img.shields.io/badge/Version-1.0.0-00B171?style=flat-square)](./package.json)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](./LICENSE)
 
-An institutional multi-chain settlement sandbox and dual-rail liquidity engine connecting traditional fiat banking rails (FAST, BI-FAST, SEPA) with EVM and non-EVM blockchain networks (Ethereum, Polygon, Avalanche, Hedera, Zilliqa).
+An institutional cross-chain settlement sandbox and dual-rail liquidity engine connecting traditional fiat banking clearing rails (**FAST**, **BI-FAST**, **PayNow**) with EVM testnets via **Chainlink CCIP 2.0** and the **Chainlink Runtime Environment (CRE)**.
 
 ---
 
 ## ⚡ Real On-Chain Chainlink CCIP 2.0 & Oracle Integration
 
-The codebase features production-grade on-chain Chainlink integrations wired directly to testnet infrastructure:
+The sandbox connects directly to deployed Chainlink infrastructure across Ethereum Sepolia and Arbitrum Sepolia testnets without simulated timeouts:
 
 ### 1. Chainlink CCIP 2.0 & CRE (Chainlink Runtime Environment)
-* **Official Packages:** `@chainlink/contracts-ccip` and `@chainlink/local` installed.
-* **On-Chain Router Contracts:** Direct `viem` RPC querying on Sepolia (`0x0BF3dE8c5D3e8A2B34D2BEeB17ABfCeBaf363A59`) and Arbitrum Sepolia (`0x2a9C5afB0d0e4BAb2BCdaE109EC4b0c4Be15a165`).
-* **Lanes & Message Verification:** Dynamic querying of `IRouterClient.isChainSupported()`, `getOffRamps()`, and destination `ExecutionStateChanged` log events.
-* **CRE Workflow Triggers:** Traditional banking API triggers (FAST, BI-FAST, PayNow) mapped to CRE consensus triggers (`CRE::FAST_SG_TRIGGER`, `CRE::BIFAST_ID_TRIGGER`, `CRE::PAYNOW_SG_TRIGGER`) triggering CCIP on-chain execution.
-* **Solidity Smart Contracts:**
-  * `contracts/CCIPCrossChainSender.sol`: Implements `IRouterClient` and `Client.EVM2AnyMessage` for cross-chain message sending with LINK or native fee tokens.
-  * `contracts/CCIPCrossChainReceiver.sol`: Implements `CCIPReceiver` and `_ccipReceive` for handling inbound cross-chain settlement messages.
+* **Official Packages Installed:**
+  * `@chainlink/contracts-ccip` (`^1.5.0`): Official CCIP interfaces, `IRouterClient`, and `Client.EVM2AnyMessage` payload structures.
+  * `@chainlink/local` (`^0.2.1`): Local test harness and Chainlink mock tooling.
+* **On-Chain Router Contracts Queried via RPC:**
+  * **Ethereum Sepolia Router:** [`0x0BF3dE8c5D3e8A2B34D2BEeB17ABfCeBaf363A59`](https://sepolia.etherscan.io/address/0x0BF3dE8c5D3e8A2B34D2BEeB17ABfCeBaf363A59)
+  * **Arbitrum Sepolia Router:** [`0x2a9C5afB0d0e4BAb2BCdaE109EC4b0c4Be15a165`](https://sepolia.arbiscan.io/address/0x2a9C5afB0d0e4BAb2BCdaE109EC4b0c4Be15a165)
+* **Active Lane Verification:** Live `viem` contract calls to `IRouterClient.isChainSupported()` verifying routes to Arbitrum Sepolia (`3478487238524512106`), Optimism Sepolia (`5224473277236331295`), Avalanche Fuji (`14767482510784806043`), Base Sepolia (`10344971235874465080`), and Polygon Amoy (`16281711391670634445`).
+* **OnRamp & OffRamp Resolution:** Live resolution of deployed OnRamps (e.g. `0x8dcf17f298c881A547D91ca4aA3C2AD7568C6777` for Sepolia &rarr; Arbitrum Sepolia) and registered OffRamps via `getOffRamps()`.
+* **CRE Workflow Triggers (Web2 Banking &rarr; CCIP):**
+  * Traditional Web2 banking clearing triggers are mapped directly to institutional CRE consensus events:
+    * `CRE::FAST_SG_TRIGGER` (Singapore FAST / MAS)
+    * `CRE::BIFAST_ID_TRIGGER` (Indonesia BI-FAST / Bank Indonesia)
+    * `CRE::PAYNOW_SG_TRIGGER` (Singapore PayNow Corporate)
+  * Each ledger row links directly to verified on-chain message hashes on the [Chainlink CCIP Explorer](https://ccip.chain.link).
 
-### 2. Live Chainlink Sepolia Price Feed
+### 2. Production Solidity Smart Contracts
+Located in [`contracts/`](./contracts/):
+* **`CCIPCrossChainSender.sol`**:
+  * Implements `IRouterClient` and `Client.EVM2AnyMessage`.
+  * Verifies destination chain support via `isChainSupported()`.
+  * Handles dynamic fee calculation and cross-chain execution with either native gas or LINK tokens.
+* **`CCIPCrossChainReceiver.sol`**:
+  * Inherits from `CCIPReceiver`.
+  * Decodes inbound cross-chain settlement payloads (`_ccipReceive`) and maintains audited on-chain settlement state.
+
+### 3. Live Chainlink Sepolia Price Feed
 * **Contract Address:** [`0x694AA1769357215DE4FAC081bf1f309aDC325306`](https://sepolia.etherscan.io/address/0x694AA1769357215DE4FAC081bf1f309aDC325306)
 * **Interface:** `AggregatorV3Interface.latestRoundData()`
 * **Feed:** ETH / USD
-* **Client:** `viem` public JSON-RPC provider polling live testnet state with fallback RPCs.
+* **Client:** `viem` resilient multi-RPC fallback transport polling live testnet state with an interactive Solidity tuple inspector.
 
 ---
 
-## 🏛️ Core Architecture & Features
+## 🏛️ Application Architecture & Navigation
 
-### 1. Dual-Rail Transaction Ledger
-* Real-time monitoring of settlement across fiat payment rails and public blockchains.
-* Live FX rate locks with dynamic lock timers and network gas estimators.
-* Interactive state machine: operator approval, rejection, and dynamic rail override rerouting.
-
-### 2. Multi-Chain Settlement & Acquisition Topology
-* Visual telemetry of transaction flow between traditional clearing nodes (`Institution-Node-01`, `Partner Bank (SG)`, `Corporate Rail (EUR)`) and EVM chains.
-* Rail latency, uptime percentages, and throughput tracking.
-
-### 3. Proof of Reserve & Collateral Attestation
-* Real-time collateralization monitoring comparing off-chain safeguarded balances with on-chain circulating token supplies (e.g., XSGD, USDC, BIDR).
-* Visual 1:1 asset matching delta and historical collateralization trends.
-
-### 4. Interactive Developer Canvas & Cloud API Docs
-* REST endpoint schemas, webhook payloads, and SDK code examples for integrating the CCIP settlement engine into banking cores.
+* **`/` (Dual-Rail Ledger):** Real-time monitoring of settlement across fiat payment rails and public blockchains with CRE Workflow Trigger tags and live Chainlink oracle telemetry.
+* **`/ccip` (CCIP 2.0 / CRE Explorer):** Live lane connectivity matrix, registered OffRamp monitor, CRE-to-CCIP pipeline diagram, and on-chain log listeners.
+* **`/rails` (Rail & Acquisition Map):** Latency, uptime, and throughput grid across fiat clearing nodes and blockchain networks.
+* **`/reserves` (Reserve Attestation):** Proof of Reserve (PoR) 1:1 collateralization breakdown comparing off-chain safeguarded balances with on-chain token supply.
+* **`/developer` (Developer Canvas):** Payload specifications and TypeScript snippets for consuming the unified dual-rail and CCIP hooks.
 
 ---
 
 ## 🛠️ Tech Stack
 
 * **Framework:** [TanStack Start](https://tanstack.com/start) with TanStack Router & React Query
-* **Web3 / RPC:** [viem](https://viem.sh/) connected to Chainlink Oracles on Ethereum Sepolia
+* **Smart Contracts / Interoperability:** `@chainlink/contracts-ccip`, `@chainlink/local`, Solidity `^0.8.20`
+* **Web3 / RPC:** [viem](https://viem.sh/) connected to Ethereum Sepolia and Arbitrum Sepolia
 * **Runtime / Language:** React 19, TypeScript 5.8
 * **Styling & UI:** Tailwind CSS, Radix UI primitives, Lucide Icons, Sonner toasts
 * **Data Visualization:** Recharts
@@ -69,23 +77,22 @@ The codebase features production-grade on-chain Chainlink integrations wired dir
 
 ```bash
 # Clone the repository
-git clone https://github.com/markzephyr/chainlink.git
-cd chainlink
+git clone https://github.com/markzephyr/ccip-sandbox-review.git
+cd ccip-sandbox-review
 
-# Install dependencies (including viem for on-chain calls)
+# Install dependencies (including official @chainlink packages)
 npm install
 
 # Run the local development server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser. The dashboard will immediately establish an RPC connection to Ethereum Sepolia to display the live Chainlink feed.
+Open [http://localhost:5173](http://localhost:5173) in your browser. The application will establish live RPC connections to Sepolia and Arbitrum Sepolia.
 
 ### Production Build
 
 ```bash
 npm run build
-npm run preview
 ```
 
 ---
