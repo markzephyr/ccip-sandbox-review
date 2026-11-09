@@ -44,7 +44,11 @@ function RailsPage() {
     pauseRail(rail.id, !isCurrentlyPaused);
     toast[isCurrentlyPaused ? "success" : "warning"](
       isCurrentlyPaused ? `${rail.name} rail resumed` : `${rail.name} rail paused`,
-      { description: isCurrentlyPaused ? "Rail traffic active and latency telemetry tracking." : "Rail traffic suspended in sandbox routing pipeline." },
+      {
+        description: isCurrentlyPaused
+          ? "Rail traffic active and latency telemetry tracking."
+          : "Rail traffic suspended in sandbox routing pipeline.",
+      },
     );
   };
 
@@ -93,15 +97,13 @@ function RailsPage() {
                       rail.status === "operational"
                         ? "border-[#00B171]/30 bg-[#00B171]/10 text-[#00B171]"
                         : rail.status === "degraded"
-                        ? "border-[#F5A623]/30 bg-[#F5A623]/10 text-[#F5A623]"
-                        : rail.status === "paused"
-                        ? "border-[#8A94A6]/30 bg-[#8A94A6]/10 text-[#8A94A6]"
-                        : "border-[#EF4444]/30 bg-[#EF4444]/10 text-[#EF4444]"
+                          ? "border-[#F5A623]/30 bg-[#F5A623]/10 text-[#F5A623]"
+                          : rail.status === "paused"
+                            ? "border-[#8A94A6]/30 bg-[#8A94A6]/10 text-[#8A94A6]"
+                            : "border-[#EF4444]/30 bg-[#EF4444]/10 text-[#EF4444]"
                     }`}
                   >
-                    <span
-                      className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[rail.status]}`}
-                    />
+                    <span className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[rail.status]}`} />
                     {rail.status}
                   </span>
                 </div>
@@ -112,7 +114,10 @@ function RailsPage() {
                     ["Uptime", `${rail.uptime.toFixed(2)}%`],
                     ["24h txns", formatCompact(rail.throughput24h)],
                   ].map(([label, value]) => (
-                    <div key={label} className="rounded-lg border border-[#2A3347] bg-[#0E1119] px-3 py-2">
+                    <div
+                      key={label}
+                      className="rounded-lg border border-[#2A3347] bg-[#0E1119] px-3 py-2"
+                    >
                       <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
                         {label}
                       </p>

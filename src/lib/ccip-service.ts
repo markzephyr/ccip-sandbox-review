@@ -258,9 +258,7 @@ export async function queryCCIPNetworkOverview(): Promise<CCIPNetworkOverview> {
   const chainKeys = Object.keys(CCIP_CHAINS) as (keyof typeof CCIP_CHAINS)[];
 
   // Query all routers in parallel
-  const routerResults = await Promise.allSettled(
-    chainKeys.map((key) => queryCCIPRouter(key)),
-  );
+  const routerResults = await Promise.allSettled(chainKeys.map((key) => queryCCIPRouter(key)));
   const routers = routerResults
     .filter((r): r is PromiseFulfilledResult<CCIPRouterState> => r.status === "fulfilled")
     .map((r) => r.value);
@@ -289,4 +287,3 @@ export async function queryCCIPNetworkOverview(): Promise<CCIPNetworkOverview> {
     queriedAt: new Date(),
   };
 }
-

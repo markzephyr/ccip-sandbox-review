@@ -276,10 +276,12 @@ export const demoReserves = {
   attestation: {
     auditor_name: "Chainlink Proof of Reserve (PoR)",
     auditor_license_id: "CHAINLINK-POR-V2",
-    methodology: "Chainlink PoR cross-chain automated reserve attestation with IRouterClient verification",
+    methodology:
+      "Chainlink PoR cross-chain automated reserve attestation with IRouterClient verification",
     report_hash: "0x8fa4b7c2d9e1a0f3b5c6e8d2a4f6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d6e8f0a2",
     certification_status: "verified",
-    scope_summary: "Automated 1:1 reserve verification across bank custodial accounts via CRE Workflow Triggers and on-chain token supply via CCIP OffRamps.",
+    scope_summary:
+      "Automated 1:1 reserve verification across bank custodial accounts via CRE Workflow Triggers and on-chain token supply via CCIP OffRamps.",
     engagement_period_start: new Date(now - 90 * 86_400_000).toISOString(),
     engagement_period_end: new Date(now).toISOString(),
     next_scheduled_audit: new Date(now + 90 * 86_400_000).toISOString(),
@@ -296,7 +298,8 @@ export const demoReserves = {
       {
         id: "FND-002",
         severity: "info",
-        title: "CCIP ARM (Active Risk Management) blessing verified for all in-flight cross-chain messages",
+        title:
+          "CCIP ARM (Active Risk Management) blessing verified for all in-flight cross-chain messages",
         status: "resolved",
       },
       {
@@ -308,10 +311,34 @@ export const demoReserves = {
     ],
   },
   off_chain: [
-    { id: "b1", custodian: "Institution-Node-01 (FAST)", account: "Safeguarding · XSGD", currency: "SGD", balance: 214_500_000 },
-    { id: "b2", custodian: "Partner Bank SG (FAST)", account: "Safeguarding · XSGD", currency: "SGD", balance: 96_250_000 },
-    { id: "b3", custodian: "Corporate Rail APAC (BI-FAST)", account: "Safeguarding · BIDR", currency: "SGD", balance: 41_800_000 },
-    { id: "b4", custodian: "Institutional Custody Trust", account: "T-Bill Reserve Pool", currency: "SGD", balance: 62_450_000 },
+    {
+      id: "b1",
+      custodian: "Institution-Node-01 (FAST)",
+      account: "Safeguarding · XSGD",
+      currency: "SGD",
+      balance: 214_500_000,
+    },
+    {
+      id: "b2",
+      custodian: "Partner Bank SG (FAST)",
+      account: "Safeguarding · XSGD",
+      currency: "SGD",
+      balance: 96_250_000,
+    },
+    {
+      id: "b3",
+      custodian: "Corporate Rail APAC (BI-FAST)",
+      account: "Safeguarding · BIDR",
+      currency: "SGD",
+      balance: 41_800_000,
+    },
+    {
+      id: "b4",
+      custodian: "Institutional Custody Trust",
+      account: "T-Bill Reserve Pool",
+      currency: "SGD",
+      balance: 62_450_000,
+    },
   ],
   on_chain: [
     { id: "t1", token: "XSGD", network: "Ethereum Sepolia", circulating_supply: 198_300_000 },

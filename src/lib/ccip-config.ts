@@ -138,7 +138,14 @@ export const ONRAMP_ABI = [
           { name: "feeToken", type: "address" },
           { name: "feeTokenAmount", type: "uint256" },
           { name: "data", type: "bytes" },
-          { name: "tokenAmounts", type: "tuple[]", components: [{ name: "token", type: "address" }, { name: "amount", type: "uint256" }] },
+          {
+            name: "tokenAmounts",
+            type: "tuple[]",
+            components: [
+              { name: "token", type: "address" },
+              { name: "amount", type: "uint256" },
+            ],
+          },
           { name: "sourceTokenData", type: "bytes[]" },
           { name: "messageId", type: "bytes32" },
         ],
@@ -174,8 +181,11 @@ export type ExecutionState = (typeof EXECUTION_STATES)[keyof typeof EXECUTION_ST
  *   PayNow/FAST/BI-FAST API Webhook → CRE Workflow Trigger → Chainlink Node
  *   → CCIP Router.ccipSend() → OnRamp → ARM Verification → OffRamp → Settlement
  */
-export const CRE_WORKFLOW_TRIGGERS: Record<string, { trigger: string; protocol: string; region: string }> = {
-  "FAST": {
+export const CRE_WORKFLOW_TRIGGERS: Record<
+  string,
+  { trigger: string; protocol: string; region: string }
+> = {
+  FAST: {
     trigger: "CRE::FAST_SG_TRIGGER",
     protocol: "Singapore FAST (MAS)",
     region: "APAC",
@@ -185,7 +195,7 @@ export const CRE_WORKFLOW_TRIGGERS: Record<string, { trigger: string; protocol: 
     protocol: "Indonesia BI-FAST (Bank Indonesia)",
     region: "APAC",
   },
-  "PayNow": {
+  PayNow: {
     trigger: "CRE::PAYNOW_SG_TRIGGER",
     protocol: "Singapore PayNow Corporate (ABS)",
     region: "APAC",
@@ -255,4 +265,3 @@ export const CCIP_CHAINS: Record<string, CCIPChainConfig> = {
     client: arbitrumSepoliaClient as PublicClient,
   },
 };
-

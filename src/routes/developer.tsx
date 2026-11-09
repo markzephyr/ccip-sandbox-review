@@ -136,7 +136,8 @@ function highlightCode(code: string) {
     // Highlight strings
     const tokens: Array<{ text: string; color: string }> = [];
     // Regex for keywords, types, strings, numbers, identifiers
-    const regex = /(".*?"|'.*?'|`.*?`|\b(?:export|type|interface|const|function|return|boolean|string|number|null|undefined|await|async|if|else)\b|\b[A-Z][a-zA-Z0-9_]*\b|\b[0-9]+(?:\.[0-9]+)?(?:_[0-9]+)?\b|[a-zA-Z_$][a-zA-Z0-9_$]*|[^\s\w]+|\s+)/g;
+    const regex =
+      /(".*?"|'.*?'|`.*?`|\b(?:export|type|interface|const|function|return|boolean|string|number|null|undefined|await|async|if|else)\b|\b[A-Z][a-zA-Z0-9_]*\b|\b[0-9]+(?:\.[0-9]+)?(?:_[0-9]+)?\b|[a-zA-Z_$][a-zA-Z0-9_$]*|[^\s\w]+|\s+)/g;
 
     let match;
     let lastIndex = 0;
@@ -216,7 +217,10 @@ function DeveloperPage() {
 
       <div className="mt-6 space-y-5">
         {SNIPPETS.map((s) => (
-          <section key={s.title} className="overflow-hidden rounded-xl border border-border bg-card shadow-panel">
+          <section
+            key={s.title}
+            className="overflow-hidden rounded-xl border border-border bg-card shadow-panel"
+          >
             {/* Terminal Header */}
             <header className="flex items-center justify-between gap-4 border-b border-border bg-[#121620] px-4 py-3">
               <div className="flex items-center gap-3">

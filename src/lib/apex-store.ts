@@ -1,9 +1,5 @@
 import { useSyncExternalStore } from "react";
-import {
-  demoLedger,
-  demoRails,
-  demoReserves,
-} from "./apex-demo";
+import { demoLedger, demoRails, demoReserves } from "./apex-demo";
 import {
   normalizeLedgerRow,
   normalizeRail,
@@ -52,7 +48,7 @@ export const apexActions = {
               requiresApproval: false,
               date: new Date().toISOString(),
             }
-          : tx
+          : tx,
       ),
     }));
   },
@@ -69,7 +65,7 @@ export const apexActions = {
               requiresApproval: false,
               date: new Date().toISOString(),
             }
-          : tx
+          : tx,
       ),
     }));
   },
@@ -84,7 +80,7 @@ export const apexActions = {
               status: "failed" as const,
               requiresApproval: false,
             }
-          : tx
+          : tx,
       ),
     }));
   },
@@ -165,10 +161,14 @@ export const apexActions = {
         }
 
         const delta = Math.floor((Math.random() - 0.5) * 50);
-        const newLatency = Math.max(baseMin - 80, Math.min(baseMax + 120, Math.round(rail.latencyMs + delta)));
+        const newLatency = Math.max(
+          baseMin - 80,
+          Math.min(baseMax + 120, Math.round(rail.latencyMs + delta)),
+        );
 
         // Throughput increments slightly
-        const newThroughput = rail.throughput24h + (Math.random() > 0.4 ? Math.floor(Math.random() * 4) + 1 : 0);
+        const newThroughput =
+          rail.throughput24h + (Math.random() > 0.4 ? Math.floor(Math.random() * 4) + 1 : 0);
 
         return {
           ...rail,

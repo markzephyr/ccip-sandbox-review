@@ -129,4 +129,3 @@ export function useCCIPMessages(chainKey: "SEPOLIA" | "ARBITRUM_SEPOLIA" = "ARBI
 
   return { messages, isLoading, error, refetch: fetchMessages };
 }
-

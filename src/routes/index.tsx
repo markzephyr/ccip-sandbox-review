@@ -74,8 +74,7 @@ const AVAILABLE_RAILS = [
 ];
 
 function LedgerPage() {
-  const { ledger, live, approveTransaction, overrideRail, rejectTransaction } =
-    useApexDualRail();
+  const { ledger, live, approveTransaction, overrideRail, rejectTransaction } = useApexDualRail();
   const chainlinkFeed = useChainlinkFeed();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showInspector, setShowInspector] = useState<boolean>(false);
@@ -198,7 +197,8 @@ function LedgerPage() {
                 </span>
               </div>
               <p className="mt-1 text-xs text-muted-foreground">
-                Continuous RPC sync via public Sepolia testnet nodes &bull; AggregatorV3Interface.latestRoundData()
+                Continuous RPC sync via public Sepolia testnet nodes &bull;
+                AggregatorV3Interface.latestRoundData()
               </p>
             </div>
           </div>
@@ -226,7 +226,9 @@ function LedgerPage() {
                 Round ID
               </p>
               <p className="font-mono text-xs text-muted-foreground mt-1">
-                {chainlinkFeed.data?.roundId ? `#${chainlinkFeed.data.roundId.slice(0, 8)}...` : "—"}
+                {chainlinkFeed.data?.roundId
+                  ? `#${chainlinkFeed.data.roundId.slice(0, 8)}...`
+                  : "—"}
               </p>
             </div>
 
@@ -334,7 +336,9 @@ function LedgerPage() {
                 </p>
               </div>
               <div className="rounded border border-[#2A3347]/60 bg-[#161B26] p-2.5">
-                <p className="text-[10px] text-muted-foreground uppercase">uint80 answeredInRound</p>
+                <p className="text-[10px] text-muted-foreground uppercase">
+                  uint80 answeredInRound
+                </p>
                 <p className="text-white mt-0.5 break-all">
                   {chainlinkFeed.data?.answeredInRound || "—"}
                 </p>
@@ -353,7 +357,9 @@ function LedgerPage() {
               </span>
               <span className="text-muted-foreground">
                 Contract:{" "}
-                <span className="text-white font-mono">0x694AA1769357215DE4FAC081bf1f309aDC325306</span>
+                <span className="text-white font-mono">
+                  0x694AA1769357215DE4FAC081bf1f309aDC325306
+                </span>
               </span>
             </div>
           </div>
@@ -442,16 +448,18 @@ function LedgerPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border bg-muted/60 text-left">
-                {["Status", "Transaction ID", "Route", "Date", "Amount", "Quick Actions"].map((h) => (
-                  <th
-                    key={h}
-                    className={`px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground ${
-                      h === "Amount" ? "text-right" : ""
-                    }`}
-                  >
-                    {h}
-                  </th>
-                ))}
+                {["Status", "Transaction ID", "Route", "Date", "Amount", "Quick Actions"].map(
+                  (h) => (
+                    <th
+                      key={h}
+                      className={`px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground ${
+                        h === "Amount" ? "text-right" : ""
+                      }`}
+                    >
+                      {h}
+                    </th>
+                  ),
+                )}
               </tr>
             </thead>
             <tbody>
@@ -477,7 +485,9 @@ function LedgerPage() {
                     key={row.id}
                     onClick={() => setSelectedId(row.id)}
                     className={`cursor-pointer border-b border-border transition-colors last:border-0 hover:bg-[#1F2637]/50 ${
-                      selected?.id === row.id ? "bg-[#0847F7]/12 shadow-[inset_3px_0_0_0_#0847F7]" : ""
+                      selected?.id === row.id
+                        ? "bg-[#0847F7]/12 shadow-[inset_3px_0_0_0_#0847F7]"
+                        : ""
                     }`}
                   >
                     <td className="px-4 py-3.5">
@@ -489,10 +499,10 @@ function LedgerPage() {
                             row.status === "settled"
                               ? "bg-[#00B171]"
                               : row.status === "processing"
-                              ? "bg-[#0847F7] animate-pulse"
-                              : row.status === "pending"
-                              ? "bg-[#F5A623]"
-                              : "bg-[#EF4444]"
+                                ? "bg-[#0847F7] animate-pulse"
+                                : row.status === "pending"
+                                  ? "bg-[#F5A623]"
+                                  : "bg-[#EF4444]"
                           }`}
                         />
                         {row.status}
@@ -514,10 +524,7 @@ function LedgerPage() {
                     <td className="px-4 py-3.5 tabular text-right text-[13px] font-semibold text-white">
                       {formatMoney(row.amount, row.currency)}
                     </td>
-                    <td
-                      className="px-4 py-3.5 text-right"
-                      onClick={(e) => e.stopPropagation()}
-                    >
+                    <td className="px-4 py-3.5 text-right" onClick={(e) => e.stopPropagation()}>
                       {row.status === "pending" || row.status === "processing" ? (
                         <Button
                           size="sm"
@@ -696,4 +703,3 @@ function LedgerPage() {
     </HubShell>
   );
 }
-

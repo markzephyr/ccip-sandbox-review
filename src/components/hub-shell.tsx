@@ -31,7 +31,9 @@ export function HubShell({
             <Zap className="h-4 w-4 text-primary-foreground" strokeWidth={2.5} />
           </span>
           <div className="leading-tight">
-            <p className="text-sm font-semibold text-sidebar-accent-foreground">CCIP Bridge Engine</p>
+            <p className="text-sm font-semibold text-sidebar-accent-foreground">
+              CCIP Bridge Engine
+            </p>
             <p className="text-[11px] text-sidebar-foreground/70">Multi-Chain Settlement</p>
           </div>
         </div>
@@ -60,9 +62,7 @@ export function HubShell({
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#00B171] opacity-75"></span>
               <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#00B171]"></span>
             </span>
-            <p className="text-[11px] font-semibold text-[#00B171]">
-              CCIP 2.0 / CRE Live Engine
-            </p>
+            <p className="text-[11px] font-semibold text-[#00B171]">CCIP 2.0 / CRE Live Engine</p>
           </div>
           <p className="mt-1 font-mono text-[10px] text-[#8A94A6]">
             CRE Workflow Triggers · Sepolia ↔ Arb Sepolia

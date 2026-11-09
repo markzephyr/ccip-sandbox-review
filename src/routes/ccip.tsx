@@ -73,7 +73,9 @@ export function CCIPPage() {
                 </span>
               </div>
               <p className="mt-1 text-xs text-muted-foreground">
-                Verified multi-lane router registry querying <code className="text-[#38BDF8]">isChainSupported()</code> and <code className="text-[#38BDF8]">ExecutionStateChanged</code> on testnet OffRamps.
+                Verified multi-lane router registry querying{" "}
+                <code className="text-[#38BDF8]">isChainSupported()</code> and{" "}
+                <code className="text-[#38BDF8]">ExecutionStateChanged</code> on testnet OffRamps.
               </p>
             </div>
           </div>
@@ -91,7 +93,9 @@ export function CCIPPage() {
               disabled={isPolling}
               className="h-8 border-[#2A3347] bg-[#161B26] text-xs text-white hover:bg-[#1F2637]"
             >
-              <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${isPolling ? "animate-spin text-[#0847F7]" : ""}`} />
+              <RefreshCw
+                className={`h-3.5 w-3.5 mr-1.5 ${isPolling ? "animate-spin text-[#0847F7]" : ""}`}
+              />
               Refresh On-Chain State
             </Button>
             <a
@@ -112,7 +116,7 @@ export function CCIPPage() {
               Connected Routers
             </span>
             <p className="mt-1 font-mono text-lg font-bold text-white">
-              {isLoading ? <Skeleton className="h-6 w-12" /> : network?.routers.length ?? 2}
+              {isLoading ? <Skeleton className="h-6 w-12" /> : (network?.routers.length ?? 2)}
             </p>
             <p className="text-[10px] text-muted-foreground">Sepolia & Arb Sepolia</p>
           </div>
@@ -121,7 +125,7 @@ export function CCIPPage() {
               Active Cross-Chain Lanes
             </span>
             <p className="mt-1 font-mono text-lg font-bold text-[#00B171]">
-              {isLoading ? <Skeleton className="h-6 w-12" /> : network?.totalSupportedLanes ?? 10}
+              {isLoading ? <Skeleton className="h-6 w-12" /> : (network?.totalSupportedLanes ?? 10)}
             </p>
             <p className="text-[10px] text-muted-foreground">Verified via isChainSupported</p>
           </div>
@@ -137,7 +141,7 @@ export function CCIPPage() {
               OffRamp Contracts
             </span>
             <p className="mt-1 font-mono text-lg font-bold text-[#F5A623]">
-              {isLoading ? <Skeleton className="h-6 w-12" /> : network?.totalOffRamps ?? 2}
+              {isLoading ? <Skeleton className="h-6 w-12" /> : (network?.totalOffRamps ?? 2)}
             </p>
             <p className="text-[10px] text-muted-foreground">ARM Active Verification</p>
           </div>
@@ -268,7 +272,8 @@ export function CCIPPage() {
                   Chainlink Runtime Environment (CRE) Workflow Triggers
                 </h3>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  How Web2 banking API calls (FAST, BI-FAST, PayNow) trigger institutional on-chain CCIP execution.
+                  How Web2 banking API calls (FAST, BI-FAST, PayNow) trigger institutional on-chain
+                  CCIP execution.
                 </p>
               </div>
               <span className="rounded bg-[#0847F7]/20 border border-[#0847F7]/40 px-2.5 py-1 text-xs font-semibold text-[#7DD3FC]">
@@ -379,7 +384,10 @@ export function CCIPPage() {
                         No CCIP execution events emitted in the last 2,000 blocks
                       </p>
                       <p className="text-[11px] text-muted-foreground leading-relaxed">
-                        Public testnet message volume is intermittent. The listener is continuously polling destination OffRamp contracts for <code className="text-[#38BDF8]">ExecutionStateChanged</code> events in real time.
+                        Public testnet message volume is intermittent. The listener is continuously
+                        polling destination OffRamp contracts for{" "}
+                        <code className="text-[#38BDF8]">ExecutionStateChanged</code> events in real
+                        time.
                       </p>
                     </div>
                   </td>
@@ -429,4 +437,3 @@ export function CCIPPage() {
     </HubShell>
   );
 }
-
