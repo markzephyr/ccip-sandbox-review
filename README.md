@@ -8,27 +8,24 @@ An institutional multi-chain settlement sandbox and dual-rail liquidity engine c
 
 ---
 
-## ⚡ Real On-Chain Chainlink Integration
+## ⚡ Real On-Chain Chainlink CCIP 2.0 & Oracle Integration
 
-Unlike purely static design mockups, **v1.0.0 features a real live on-chain Chainlink integration** wired directly to Ethereum Sepolia testnet:
+The codebase features production-grade on-chain Chainlink integrations wired directly to testnet infrastructure:
 
+### 1. Chainlink CCIP 2.0 & CRE (Chainlink Runtime Environment)
+* **Official Packages:** `@chainlink/contracts-ccip` and `@chainlink/local` installed.
+* **On-Chain Router Contracts:** Direct `viem` RPC querying on Sepolia (`0x0BF3dE8c5D3e8A2B34D2BEeB17ABfCeBaf363A59`) and Arbitrum Sepolia (`0x2a9C5afB0d0e4BAb2BCdaE109EC4b0c4Be15a165`).
+* **Lanes & Message Verification:** Dynamic querying of `IRouterClient.isChainSupported()`, `getOffRamps()`, and destination `ExecutionStateChanged` log events.
+* **CRE Workflow Triggers:** Traditional banking API triggers (FAST, BI-FAST, PayNow) mapped to CRE consensus triggers (`CRE::FAST_SG_TRIGGER`, `CRE::BIFAST_ID_TRIGGER`, `CRE::PAYNOW_SG_TRIGGER`) triggering CCIP on-chain execution.
+* **Solidity Smart Contracts:**
+  * `contracts/CCIPCrossChainSender.sol`: Implements `IRouterClient` and `Client.EVM2AnyMessage` for cross-chain message sending with LINK or native fee tokens.
+  * `contracts/CCIPCrossChainReceiver.sol`: Implements `CCIPReceiver` and `_ccipReceive` for handling inbound cross-chain settlement messages.
+
+### 2. Live Chainlink Sepolia Price Feed
 * **Contract Address:** [`0x694AA1769357215DE4FAC081bf1f309aDC325306`](https://sepolia.etherscan.io/address/0x694AA1769357215DE4FAC081bf1f309aDC325306)
 * **Interface:** `AggregatorV3Interface.latestRoundData()`
 * **Feed:** ETH / USD
-* **Client:** `viem` public JSON-RPC provider polling live testnet state
-* **Dashboard Telemetry:** Displays live on-chain price, round ID, block timestamp, and single-click RPC refresh with direct Sepolia Etherscan verification.
-
-```typescript
-// src/hooks/useChainlinkFeed.ts
-const [roundData, decimals, description] = await Promise.all([
-  client.readContract({
-    address: "0x694AA1769357215DE4FAC081bf1f309aDC325306",
-    abi: AGGREGATOR_ABI,
-    functionName: "latestRoundData",
-  }),
-  // ...
-]);
-```
+* **Client:** `viem` public JSON-RPC provider polling live testnet state with fallback RPCs.
 
 ---
 

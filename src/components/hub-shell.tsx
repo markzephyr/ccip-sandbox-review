@@ -1,9 +1,10 @@
 import { Link } from "@tanstack/react-router";
-import { Activity, Code2, Layers, ShieldCheck, Zap } from "lucide-react";
+import { Activity, ArrowLeftRight, Code2, Layers, ShieldCheck, Zap } from "lucide-react";
 import type { ReactNode } from "react";
 
 const NAV = [
   { to: "/", label: "Dual-Rail Ledger", icon: Layers },
+  { to: "/ccip", label: "CCIP 2.0 / CRE Explorer", icon: ArrowLeftRight },
   { to: "/rails", label: "Rail & Acquisition Map", icon: Activity },
   { to: "/reserves", label: "Reserve Attestation", icon: ShieldCheck },
   { to: "/developer", label: "Developer Canvas", icon: Code2 },
@@ -60,11 +61,11 @@ export function HubShell({
               <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#00B171]"></span>
             </span>
             <p className="text-[11px] font-semibold text-[#00B171]">
-              CCIP Engine v1.0.0 - Active Connection
+              CCIP 2.0 / CRE Live Engine
             </p>
           </div>
           <p className="mt-1 font-mono text-[10px] text-[#8A94A6]">
-            Realtime dual-rail feed · 3s telemetry
+            CRE Workflow Triggers · Sepolia ↔ Arb Sepolia
           </p>
         </div>
       </aside>
@@ -78,7 +79,7 @@ export function HubShell({
             </div>
             <div className="inline-flex items-center gap-1.5 self-start rounded-md border border-[#0847F7]/30 bg-[#0847F7]/10 px-2.5 py-1 text-[11px] font-medium text-[#0847F7] shadow-xs">
               <span className="h-1.5 w-1.5 rounded-full bg-[#0847F7]" />
-              CCIP Bridge Engine - Multi-Chain Settlement Sandbox
+              Chainlink Runtime Environment (CRE) &bull; CCIP 2.0
             </div>
           </div>
           <div className="flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1.5 shadow-xs">
@@ -88,7 +89,7 @@ export function HubShell({
               }`}
             />
             <span className="font-mono text-[11px] text-muted-foreground">
-              {isFetching ? "SYNCING" : "LIVE SIMULATION · 3s"}
+              {isFetching ? "SYNCING RPC" : "LIVE CCIP &bull; ON-CHAIN"}
             </span>
           </div>
         </header>

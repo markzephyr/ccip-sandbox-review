@@ -601,6 +601,30 @@ function LedgerPage() {
                     <dd className="text-right font-medium text-white">{v}</dd>
                   </div>
                 ))}
+                {selected.creWorkflowTrigger && (
+                  <div className="flex justify-between gap-4 border-b border-border pb-2">
+                    <dt className="text-muted-foreground">CRE Workflow Trigger</dt>
+                    <dd className="text-right font-mono text-[11px] text-[#7DD3FC]">
+                      {selected.creWorkflowTrigger}
+                    </dd>
+                  </div>
+                )}
+                {selected.ccipMessageId && (
+                  <div className="flex flex-col gap-1 border-b border-border pb-2">
+                    <dt className="text-muted-foreground">CCIP Message ID</dt>
+                    <dd className="font-mono text-[11px] text-[#38BDF8] break-all">
+                      <a
+                        href={`https://ccip.chain.link/msg/${selected.ccipMessageId}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="hover:underline inline-flex items-center gap-1"
+                      >
+                        {selected.ccipMessageId.slice(0, 16)}...{selected.ccipMessageId.slice(-8)}
+                        <ExternalLink className="h-3 w-3 inline" />
+                      </a>
+                    </dd>
+                  </div>
+                )}
                 <div className="flex items-center justify-between gap-4 border-b border-border pb-2">
                   <dt className="inline-flex items-center gap-1.5 text-muted-foreground">
                     <Fuel className="h-3.5 w-3.5 text-[#0847F7]" /> Gas cost

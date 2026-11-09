@@ -7,10 +7,6 @@ export default defineConfig({
   plugins: [
     tsconfigPaths(),
     tailwindcss(),
-    tanstackStart({
-      prerender: {
-        enabled: true,
-      },
-    }),
+    tanstackStart(),
   ],
 });

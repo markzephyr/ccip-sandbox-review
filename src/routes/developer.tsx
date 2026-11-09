@@ -44,6 +44,9 @@ export interface LedgerRow {
   gasCost: number;         // gas_cost
   networkFee: number;      // network_fee
   requiresApproval: boolean;
+  ccipMessageId?: string;  // bytes32 CCIP messageId
+  ccipExecutionState?: "Untouched" | "InFlight" | "Success" | "Failure";
+  creWorkflowTrigger?: string; // e.g. "CRE::FAST_SG_TRIGGER"
 }
 
 export interface RailHealth {
@@ -102,6 +105,22 @@ function useFeed<T>(path: string, parse: (p: unknown) => T) {
     </Table>
   );
 }`,
+  },
+  {
+    title: "CCIP 2.0 & CRE Router Queries (viem)",
+    note: "Reads live on-chain CCIP lanes and OffRamp execution state without mock timeouts.",
+    code: `import { createPublicClient, http } from "viem";
+import { sepolia } from "viem/chains";
+import { ROUTER_ABI, OFFRAMP_ABI } from "@/lib/ccip-config";
+
+// Read supported lanes directly from CCIP Router contract
+const client = createPublicClient({ chain: sepolia, transport: http() });
+const isSupported = await client.readContract({
+  address: "0x0BF3dE8c5D3e8A2B34D2BEeB17ABfCeBaf363A59",
+  abi: ROUTER_ABI,
+  functionName: "isChainSupported",
+  args: [3478487238524512106n], // Arbitrum Sepolia selector
+});`,
   },
 ];
 

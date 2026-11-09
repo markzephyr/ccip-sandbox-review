@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CcipRouteImport } from './routes/ccip'
 import { Route as DeveloperRouteImport } from './routes/developer'
 import { Route as RailsRouteImport } from './routes/rails'
 import { Route as ReservesRouteImport } from './routes/reserves'
@@ -17,6 +18,11 @@ import { Route as ReservesRouteImport } from './routes/reserves'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CcipRoute = CcipRouteImport.update({
+  id: '/ccip',
+  path: '/ccip',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DeveloperRoute = DeveloperRouteImport.update({
@@ -37,12 +43,14 @@ const ReservesRoute = ReservesRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ccip': typeof CcipRoute
   '/developer': typeof DeveloperRoute
   '/rails': typeof RailsRoute
   '/reserves': typeof ReservesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ccip': typeof CcipRoute
   '/developer': typeof DeveloperRoute
   '/rails': typeof RailsRoute
   '/reserves': typeof ReservesRoute
@@ -50,20 +58,22 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ccip': typeof CcipRoute
   '/developer': typeof DeveloperRoute
   '/rails': typeof RailsRoute
   '/reserves': typeof ReservesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/developer' | '/rails' | '/reserves'
+  fullPaths: '/' | '/ccip' | '/developer' | '/rails' | '/reserves'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/developer' | '/rails' | '/reserves'
-  id: '__root__' | '/' | '/developer' | '/rails' | '/reserves'
+  to: '/' | '/ccip' | '/developer' | '/rails' | '/reserves'
+  id: '__root__' | '/' | '/ccip' | '/developer' | '/rails' | '/reserves'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CcipRoute: typeof CcipRoute
   DeveloperRoute: typeof DeveloperRoute
   RailsRoute: typeof RailsRoute
   ReservesRoute: typeof ReservesRoute
@@ -76,6 +86,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ccip': {
+      id: '/ccip'
+      path: '/ccip'
+      fullPath: '/ccip'
+      preLoaderRoute: typeof CcipRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/developer': {
@@ -104,6 +121,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CcipRoute: CcipRoute,
   DeveloperRoute: DeveloperRoute,
   RailsRoute: RailsRoute,
   ReservesRoute: ReservesRoute,

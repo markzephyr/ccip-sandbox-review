@@ -19,6 +19,12 @@ export interface LedgerRow {
   gasCurrency: string;
   networkFee: number;
   requiresApproval: boolean;
+  ccipMessageId?: string;
+  ccipSourceSelector?: string;
+  ccipDestSelector?: string;
+  ccipExecutionState?: string;
+  creWorkflowTrigger?: string;
+  creWorkflowName?: string;
 }
 
 export interface RailHealth {
@@ -144,6 +150,12 @@ export function normalizeLedgerRow(raw: unknown, index: number): LedgerRow {
     gasCurrency: str(pick(r, "gas_currency", "gasCurrency"), "ETH"),
     networkFee: num(pick(r, "network_fee", "networkFee", "fee")),
     requiresApproval: bool(pick(r, "requires_approval", "requiresApproval", "needs_approval")),
+    ccipMessageId: str(pick(r, "ccip_message_id", "ccipMessageId")),
+    ccipSourceSelector: str(pick(r, "ccip_source_selector", "ccipSourceSelector")),
+    ccipDestSelector: str(pick(r, "ccip_dest_selector", "ccipDestSelector")),
+    ccipExecutionState: str(pick(r, "ccip_execution_state", "ccipExecutionState")),
+    creWorkflowTrigger: str(pick(r, "cre_workflow_trigger", "creWorkflowTrigger")),
+    creWorkflowName: str(pick(r, "cre_workflow_name", "creWorkflowName")),
   };
 }
 
