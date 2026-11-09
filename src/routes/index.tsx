@@ -60,11 +60,11 @@ const STATUS_STYLE: Record<LedgerStatus, string> = {
 };
 
 const AVAILABLE_RAILS = [
-  "Ethereum",
-  "Polygon",
-  "Avalanche",
-  "Hedera",
-  "Zilliqa",
+  "Ethereum Sepolia",
+  "Arbitrum Sepolia",
+  "Avalanche Fuji",
+  "Base Sepolia",
+  "Polygon Amoy",
   "FAST · Institution-Node-01",
   "FAST · Partner Bank (SG)",
   "FAST · Institution-Node-02",

@@ -14,7 +14,6 @@ import {
 import { useApexStore } from "@/lib/apex-store";
 
 const POLL_MS = 5_000;
-const SIM_TICK_MS = 3_000;
 
 export interface DualRailFeed<T> {
   data: T;
@@ -31,14 +30,6 @@ export interface DualRailFeed<T> {
  */
 export function useApexDualRail() {
   const store = useApexStore();
-
-  // Background interval loop for simulation data breathing
-  useEffect(() => {
-    const timer = setInterval(() => {
-      store.tickSimulation();
-    }, SIM_TICK_MS);
-    return () => clearInterval(timer);
-  }, []);
 
   // Poll cloud endpoints in background if reachable
   const cloudLedger = useQuery({
