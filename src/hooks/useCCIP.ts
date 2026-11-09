@@ -11,7 +11,7 @@
 import { useEffect, useState, useCallback } from "react";
 import {
   queryCCIPNetworkOverview,
-  queryRecentCCIPMessages,
+  queryLiveCCIPRouterMessages,
   type CCIPNetworkOverview,
   type CCIPMessageEvent,
 } from "@/lib/ccip-service";
@@ -112,7 +112,7 @@ export function useCCIPMessages(chainKey: "SEPOLIA" | "ARBITRUM_SEPOLIA" = "ARBI
     try {
       setIsLoading(true);
       setError(null);
-      const msgs = await queryRecentCCIPMessages(chainKey, 2000n);
+      const msgs = await queryLiveCCIPRouterMessages(chainKey, 2500n);
       setMessages(msgs);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to query CCIP messages");

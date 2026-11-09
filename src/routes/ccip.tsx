@@ -185,80 +185,87 @@ export function CCIPPage() {
       {/* Tab 1: Live CCIP Lanes & Routers */}
       {activeTab === "lanes" && (
         <div className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            {network?.routers.map((router) => (
-              <div
-                key={router.chainName}
-                className="rounded-xl border border-border bg-card p-5 shadow-panel"
-              >
-                <div className="flex items-center justify-between pb-3 border-b border-border">
-                  <div className="flex items-center gap-2.5">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0847F7]/20 border border-[#0847F7]/30 text-[#7DD3FC]">
-                      <Zap className="h-4 w-4" />
-                    </span>
-                    <div>
-                      <h3 className="text-sm font-semibold text-white">{router.chainName}</h3>
-                      <p className="font-mono text-[11px] text-muted-foreground">
-                        Router: {router.routerAddress}
-                      </p>
-                    </div>
-                  </div>
-                  <span className="rounded-full bg-[#00B171]/15 border border-[#00B171]/40 px-2 py-0.5 text-[10px] font-semibold text-[#00B171]">
-                    Operational
-                  </span>
-                </div>
-
-                <div className="mt-4">
-                  <h4 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
-                    Verified Destination Lanes (isChainSupported)
-                  </h4>
-                  <div className="space-y-2">
-                    {router.supportedLanes.map((lane) => (
-                      <div
-                        key={lane.destChainSelector}
-                        className="flex items-center justify-between rounded-lg border border-[#2A3347] bg-[#0E1119] px-3 py-2 text-xs"
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="text-white font-medium">{lane.destChain}</span>
-                          <span className="font-mono text-[10px] text-muted-foreground">
-                            Selector: {lane.destChainSelector.slice(0, 8)}...
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {lane.isSupported ? (
-                            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#00B171]">
-                              <CheckCircle2 className="h-3.5 w-3.5" /> Supported
-                            </span>
-                          ) : (
-                            <span className="text-[11px] text-muted-foreground">Unsupported</span>
-                          )}
-                        </div>
+          {isLoading && !network ? (
+            <div className="grid gap-6 md:grid-cols-2">
+              <Skeleton className="h-64 rounded-xl" />
+              <Skeleton className="h-64 rounded-xl" />
+            </div>
+          ) : (
+            <div className="grid gap-6 md:grid-cols-2">
+              {network?.routers.map((router) => (
+                <div
+                  key={router.chainName}
+                  className="rounded-xl border border-border bg-card p-5 shadow-panel"
+                >
+                  <div className="flex items-center justify-between pb-3 border-b border-border">
+                    <div className="flex items-center gap-2.5">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0847F7]/20 border border-[#0847F7]/30 text-[#7DD3FC]">
+                        <Zap className="h-4 w-4" />
+                      </span>
+                      <div>
+                        <h3 className="text-sm font-semibold text-white">{router.chainName}</h3>
+                        <p className="font-mono text-[11px] text-muted-foreground">
+                          Router: {router.routerAddress}
+                        </p>
                       </div>
-                    ))}
+                    </div>
+                    <span className="rounded-full bg-[#00B171]/15 border border-[#00B171]/40 px-2 py-0.5 text-[10px] font-semibold text-[#00B171]">
+                      Operational
+                    </span>
                   </div>
-                </div>
 
-                {router.offRamps.length > 0 && (
-                  <div className="mt-4 border-t border-border pt-3">
+                  <div className="mt-4">
                     <h4 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
-                      Registered OffRamp Contracts (getOffRamps)
+                      Verified Destination Lanes (isChainSupported)
                     </h4>
-                    <div className="space-y-1.5">
-                      {router.offRamps.map((or) => (
+                    <div className="space-y-2">
+                      {router.supportedLanes.map((lane) => (
                         <div
-                          key={or.offRampAddress}
-                          className="flex items-center justify-between text-[11px] font-mono text-muted-foreground"
+                          key={lane.destChainSelector}
+                          className="flex items-center justify-between rounded-lg border border-[#2A3347] bg-[#0E1119] px-3 py-2 text-xs"
                         >
-                          <span>{or.sourceChainName}</span>
-                          <span className="text-white">{or.offRampAddress}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-white font-medium">{lane.destChain}</span>
+                            <span className="font-mono text-[10px] text-muted-foreground">
+                              Selector: {lane.destChainSelector.slice(0, 8)}...
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {lane.isSupported ? (
+                              <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#00B171]">
+                                <CheckCircle2 className="h-3.5 w-3.5" /> Supported
+                              </span>
+                            ) : (
+                              <span className="text-[11px] text-muted-foreground">Unsupported</span>
+                            )}
+                          </div>
                         </div>
                       ))}
                     </div>
                   </div>
-                )}
-              </div>
-            ))}
-          </div>
+
+                  {router.offRamps.length > 0 && (
+                    <div className="mt-4 border-t border-border pt-3">
+                      <h4 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                        Registered OffRamp Contracts (getOffRamps)
+                      </h4>
+                      <div className="space-y-1.5">
+                        {router.offRamps.map((or) => (
+                          <div
+                            key={or.offRampAddress}
+                            className="flex items-center justify-between text-[11px] font-mono text-muted-foreground"
+                          >
+                            <span>{or.sourceChainName}</span>
+                            <span className="text-white">{or.offRampAddress}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -374,22 +381,9 @@ export function CCIPPage() {
             <tbody>
               {messages.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-10 text-center">
-                    <div className="flex flex-col items-center justify-center max-w-md mx-auto space-y-2">
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-[#0847F7]/30 bg-[#0847F7]/10 px-3 py-1 text-xs font-medium text-[#7DD3FC]">
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#0847F7] animate-pulse" />
-                        Listening on 68 Registered CCIP OffRamps
-                      </span>
-                      <p className="text-xs text-white font-medium mt-2">
-                        No CCIP execution events emitted in the last 2,000 blocks
-                      </p>
-                      <p className="text-[11px] text-muted-foreground leading-relaxed">
-                        Public testnet message volume is intermittent. The listener is continuously
-                        polling destination OffRamp contracts for{" "}
-                        <code className="text-[#38BDF8]">ExecutionStateChanged</code> events in real
-                        time.
-                      </p>
-                    </div>
+                  <td colSpan={5} className="px-4 py-10 text-center text-xs text-muted-foreground">
+                    Querying destination OffRamp contracts for recent ExecutionStateChanged
+                    events...
                   </td>
                 </tr>
               ) : (
