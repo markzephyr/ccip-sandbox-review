@@ -154,10 +154,13 @@ export async function queryCCIPRouter(
 /* ------------------------------------------------------------------ */
 
 /**
- * Query active on-chain CCIP Send events directly from the CCIP Router.
- * The Router emits logs during ccipSend() execution where the OnRamp records:
+ * Query active on-chain CCIP ExecutionStateChanged events.
+ * The destination chain's OffRamp emits ExecutionStateChanged when a message executes:
  * topic0: 0x8c324ce1367b83031769f6a813e3bb4c117aba2185789d66b98b791405be6df2
- * topic1: destChainSelector, topic2: sequenceNumber, topic3: messageId
+ * topic1: sourceChainSelector (the ORIGIN chain), topic2: sequenceNumber, topic3: messageId
+ * Therefore:
+ * - Source Chain = CHAIN_SELECTOR_LABELS[sourceSelector]
+ * - Destination Chain = config.name (the chain currently being queried)
  */
 export async function queryLiveCCIPRouterMessages(
   chainKey: keyof typeof CCIP_CHAINS,
@@ -166,7 +169,7 @@ export async function queryLiveCCIPRouterMessages(
   const config = CCIP_CHAINS[chainKey];
   if (!config) return [];
 
-  const { client, routerAddress, name: sourceName } = config;
+  const { client, routerAddress, name: destName } = config;
   const currentBlock = await (client as PublicClient).getBlockNumber();
   const fromBlock = currentBlock > blockRange ? currentBlock - blockRange : 0n;
 
@@ -192,7 +195,7 @@ export async function queryLiveCCIPRouterMessages(
           );
 
           if (ccipLog && ccipLog.topics[3]) {
-            const destSelector = BigInt(ccipLog.topics[1] || 0).toString();
+            const sourceSelector = BigInt(ccipLog.topics[1] || 0).toString();
             const seqNumber = BigInt(ccipLog.topics[2] || 0).toString();
             const messageId = ccipLog.topics[3];
 
@@ -202,9 +205,10 @@ export async function queryLiveCCIPRouterMessages(
               state: "Success",
               stateCode: 2,
               offRampAddress: ccipLog.address,
-              sourceChain: sourceName,
-              destChain:
-                CHAIN_SELECTOR_LABELS[destSelector] || `Selector ${destSelector.slice(0, 8)}...`,
+              sourceChain:
+                CHAIN_SELECTOR_LABELS[sourceSelector] ||
+                `Selector ${sourceSelector.slice(0, 8)}...`,
+              destChain: destName,
               blockNumber: (log.blockNumber || 0n).toString(),
               transactionHash: log.transactionHash,
               explorerUrl: `${config.explorerUrl}/tx/${log.transactionHash}`,
