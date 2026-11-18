@@ -226,11 +226,11 @@ function LedgerPage() {
                 </span>
                 <span className="inline-flex items-center gap-1 rounded border border-[#0847F7]/30 bg-[#0847F7]/15 px-2 py-0.5 font-mono text-[10px] text-[#7DD3FC]">
                   <span className="h-1 w-1 rounded-full bg-[#0847F7] animate-pulse" />
-                  Polled {chainlinkFeed.secondsAgo}s ago &bull; Next in {chainlinkFeed.nextPollIn}s
+                  Polled {chainlinkFeed.secondsAgo}s ago • Next in {chainlinkFeed.nextPollIn}s
                 </span>
               </div>
               <p className="mt-1 text-xs text-muted-foreground">
-                Continuous RPC sync via public Sepolia testnet nodes &bull;
+                Continuous RPC sync via public Sepolia testnet nodes •
                 AggregatorV3Interface.latestRoundData()
               </p>
             </div>

@@ -79,7 +79,7 @@ export function HubShell({
             </div>
             <div className="inline-flex items-center gap-1.5 self-start rounded-md border border-[#0847F7]/30 bg-[#0847F7]/10 px-2.5 py-1 text-[11px] font-medium text-[#0847F7] shadow-xs">
               <span className="h-1.5 w-1.5 rounded-full bg-[#0847F7]" />
-              Chainlink Runtime Environment (CRE) &bull; CCIP 2.0
+              Chainlink Runtime Environment (CRE) • CCIP 2.0
             </div>
           </div>
           <div className="flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1.5 shadow-xs">
@@ -89,7 +89,7 @@ export function HubShell({
               }`}
             />
             <span className="font-mono text-[11px] text-muted-foreground">
-              {isFetching ? "SYNCING RPC" : "CCIP &bull; TESTNET"}
+              {isFetching ? "SYNCING RPC" : "CCIP • TESTNET"}
             </span>
           </div>
         </header>
