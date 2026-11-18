@@ -216,7 +216,8 @@ export async function queryLiveCCIPRouterMessages(
               // Graceful fallback to default if parsing reverts
             }
 
-            const state = EXECUTION_STATES[stateCode as keyof typeof EXECUTION_STATES] ?? "Success";
+            const state =
+              EXECUTION_STATES[stateCode as keyof typeof EXECUTION_STATES] ?? "Success";
 
             messages.push({
               messageId,
