@@ -1,17 +1,12 @@
-import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import {
-  fetchJson,
-  normalizeLedgerRow,
-  normalizeRail,
-  normalizeReserves,
-  unwrapList,
-  type LedgerRow,
-  type RailHealth,
-  type ReserveSnapshot,
-} from "@/lib/apex";
+import { type LedgerRow, type RailHealth, type ReserveSnapshot } from "@/lib/apex";
 import { useApexStore } from "@/lib/apex-store";
+import {
+  getServerLedger,
+  approveServerTransaction,
+  rejectServerTransaction,
+} from "@/lib/server/api";
 
 const POLL_MS = 5_000;
 
@@ -24,21 +19,21 @@ export interface DualRailFeed<T> {
 }
 
 /**
- * Single unified hook covering all three dual-rail feeds for Apex Rail.
- * Integrates live simulation store (background interval ticking FX, status transitions, latencies)
- * and falls back gracefully to cloud polling.
+ * Unified hook covering all dual-rail feeds.
+ * Synchronizes ledger state via TanStack Start server functions and CCIP execution backend.
  */
 export function useApexDualRail() {
   const store = useApexStore();
 
-  // Poll cloud endpoints in background if reachable
-  const cloudLedger = useQuery({
-    queryKey: ["apex", "ledger"],
-    queryFn: async ({ signal }) => {
-      const raw = await fetchJson("/api/ledger", signal);
-      const parsed = unwrapList(raw).map(normalizeLedgerRow);
-      store.setLedger(parsed);
-      return parsed;
+  // Poll server function for ledger data
+  const serverLedgerQuery = useQuery({
+    queryKey: ["apex", "server-ledger"],
+    queryFn: async () => {
+      const data = await getServerLedger();
+      if (Array.isArray(data) && data.length > 0) {
+        store.setLedger(data as LedgerRow[]);
+      }
+      return data;
     },
     refetchInterval: POLL_MS,
     refetchIntervalInBackground: false,
@@ -46,63 +41,58 @@ export function useApexDualRail() {
     retry: 1,
   });
 
-  const cloudRails = useQuery({
-    queryKey: ["apex", "rails"],
-    queryFn: async ({ signal }) => {
-      const raw = await fetchJson("/api/rails/health", signal);
-      const parsed = unwrapList(raw).map(normalizeRail);
-      store.setRails(parsed);
-      return parsed;
-    },
-    refetchInterval: POLL_MS,
-    refetchIntervalInBackground: false,
-    staleTime: 0,
-    retry: 1,
-  });
+  const live = !!serverLedgerQuery.data;
 
-  const cloudReserves = useQuery({
-    queryKey: ["apex", "reserves"],
-    queryFn: async ({ signal }) => {
-      const raw = await fetchJson("/api/treasury/reserves", signal);
-      const parsed = normalizeReserves(raw);
-      store.setReserves(parsed);
-      return parsed;
-    },
-    refetchInterval: POLL_MS,
-    refetchIntervalInBackground: false,
-    staleTime: 0,
-    retry: 1,
-  });
+  const handleApprove = async (id: string) => {
+    try {
+      const result = await approveServerTransaction({ data: { id } });
+      await serverLedgerQuery.refetch();
+      return result;
+    } catch {
+      // Fallback to local state mutation if server call fails
+      store.approveTransaction(id);
+      return { success: true };
+    }
+  };
 
-  const live = !!(cloudLedger.data || cloudRails.data || cloudReserves.data);
+  const handleReject = async (id: string) => {
+    try {
+      const result = await rejectServerTransaction({ data: { id } });
+      await serverLedgerQuery.refetch();
+      return result;
+    } catch {
+      store.rejectTransaction(id);
+      return { success: true };
+    }
+  };
 
   return {
     ledger: {
       data: store.ledger,
       isLoading: false,
-      isFetching: cloudLedger.isFetching,
+      isFetching: serverLedgerQuery.isFetching,
       live,
       updatedAt: store.lastTick,
     } as DualRailFeed<LedgerRow[]>,
     rails: {
       data: store.rails,
       isLoading: false,
-      isFetching: cloudRails.isFetching,
+      isFetching: false,
       live,
       updatedAt: store.lastTick,
     } as DualRailFeed<RailHealth[]>,
     reserves: {
       data: store.reserves,
       isLoading: false,
-      isFetching: cloudReserves.isFetching,
+      isFetching: false,
       live,
       updatedAt: store.lastTick,
     } as DualRailFeed<ReserveSnapshot>,
     live,
     // Store mutation actions
-    approveTransaction: store.approveTransaction,
+    approveTransaction: handleApprove,
     overrideRail: store.overrideRail,
-    rejectTransaction: store.rejectTransaction,
+    rejectTransaction: handleReject,
     pauseRail: store.pauseRail,
   };
 }

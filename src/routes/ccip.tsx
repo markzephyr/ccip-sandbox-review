@@ -133,7 +133,7 @@ export function CCIPPage() {
             <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
               CRE Workflow Triggers
             </span>
-            <p className="mt-1 font-mono text-lg font-bold text-[#7DD3FC]">3 Active</p>
+            <p className="mt-1 font-mono text-lg font-bold text-[#7DD3FC]">3 Configured</p>
             <p className="text-[10px] text-muted-foreground">FAST, BI-FAST, PayNow</p>
           </div>
           <div className="rounded-lg border border-[#2A3347]/60 bg-[#0E1119] p-3">

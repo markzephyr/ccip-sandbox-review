@@ -62,7 +62,7 @@ export function HubShell({
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#00B171] opacity-75"></span>
               <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#00B171]"></span>
             </span>
-            <p className="text-[11px] font-semibold text-[#00B171]">CCIP 2.0 / CRE Live Engine</p>
+            <p className="text-[11px] font-semibold text-[#00B171]">CCIP 2.0 / CRE Engine</p>
           </div>
           <p className="mt-1 font-mono text-[10px] text-[#8A94A6]">
             CRE Workflow Triggers · Sepolia ↔ Arb Sepolia
@@ -89,7 +89,7 @@ export function HubShell({
               }`}
             />
             <span className="font-mono text-[11px] text-muted-foreground">
-              {isFetching ? "SYNCING RPC" : "LIVE CCIP &bull; ON-CHAIN"}
+              {isFetching ? "SYNCING RPC" : "CCIP &bull; TESTNET"}
             </span>
           </div>
         </header>

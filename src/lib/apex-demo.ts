@@ -9,6 +9,14 @@
  * All institution names are fictional placeholders — no real-world affiliation implied.
  */
 
+/**
+ * ⚠️  SEED DATA — Initial demonstration values.
+ * This file provides baseline demo/seed records for UI exploration.
+ * Counterparties, fiat balances, and historical trends are development placeholders.
+ * When CCIP_PRIVATE_KEY is set in .env, transaction approvals dispatch REAL
+ * on-chain CCIP cross-chain transfers via the Sepolia Router.
+ */
+
 import { CCIP_CHAIN_SELECTORS } from "./ccip-config";
 
 const now = Date.now();

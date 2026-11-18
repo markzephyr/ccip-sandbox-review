@@ -199,11 +199,30 @@ export async function queryLiveCCIPRouterMessages(
             const seqNumber = BigInt(ccipLog.topics[2] || 0).toString();
             const messageId = ccipLog.topics[3];
 
+            // Parse execution state dynamically from the event data payload:
+            // ExecutionStateChanged(uint64 sourceChainSelector, uint64 sequenceNumber, bytes32 messageId, bytes32 messageHash, uint8 state, bytes returnData, uint256 gasUsed)
+            // Topic 1 = sourceChainSelector, Topic 2 = sequenceNumber, Topic 3 = messageId
+            // Non-indexed: bytes32 messageHash (bytes 0-31), uint8 state (bytes 32-63)
+            let stateCode = 2;
+            try {
+              if (ccipLog.data && ccipLog.data.length >= 130) {
+                // Byte 32-63 is hex chars 66 to 130
+                const parsed = parseInt(ccipLog.data.slice(66, 130), 16);
+                if (parsed >= 0 && parsed <= 3) {
+                  stateCode = parsed;
+                }
+              }
+            } catch {
+              // Graceful fallback to default if parsing reverts
+            }
+
+            const state = EXECUTION_STATES[stateCode as keyof typeof EXECUTION_STATES] ?? "Success";
+
             messages.push({
               messageId,
               sequenceNumber: seqNumber,
-              state: "Success",
-              stateCode: 2,
+              state,
+              stateCode,
               offRampAddress: ccipLog.address,
               sourceChain:
                 CHAIN_SELECTOR_LABELS[sourceSelector] ||

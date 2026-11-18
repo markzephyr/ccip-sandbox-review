@@ -1,4 +1,4 @@
-export const API_BASE = "https://vercel.app";
+export const API_BASE = "";
 
 export type Rail = "fiat" | "crypto";
 export type LedgerStatus = "settled" | "pending" | "failed" | "processing";

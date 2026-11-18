@@ -144,7 +144,12 @@ function ReservesPage() {
             </div>
           </div>
           <div className="text-right text-[11px] text-muted-foreground">
-            <p className="font-medium text-foreground">Audited by {snap.attestationBy}</p>
+            <p className="font-medium text-foreground">
+              Attestation Reference: {snap.attestationBy}
+              <span className="ml-2 inline-flex items-center rounded border border-[#F5A623]/40 bg-[#F5A623]/15 px-2 py-0.5 text-[10px] font-semibold text-[#F5A623]">
+                SEED DATA
+              </span>
+            </p>
             <p className="tabular mt-0.5">
               Attestation timestamp:{" "}
               {snap.updatedAt ? new Date(snap.updatedAt).toLocaleTimeString("en-SG") : "—"}
@@ -430,7 +435,7 @@ function ReservesPage() {
                   Historical Collateralization Ratio
                 </h3>
                 <p className="text-[11px] text-muted-foreground">
-                  Continuous 24h peg stability tracking (%)
+                  Simulated trend data — seed values for demonstration
                 </p>
               </div>
             </div>

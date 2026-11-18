@@ -69,7 +69,7 @@ export interface ReserveSnapshot {
   },
   {
     title: "useApexDualRail",
-    note: "A single hook polls all three routes every 5 seconds and exposes fetch state per feed.",
+    note: "A single hook calls TanStack Start server functions and exposes fetch state per feed.",
     code: `const POLL_MS = 5_000;
 
 export function useApexDualRail() {
@@ -210,7 +210,9 @@ function DeveloperPage() {
             <div className="mt-2 inline-block rounded-md bg-[#0847F7]/10 border border-[#38BDF8]/20 px-2.5 py-1">
               <p className="tabular font-mono text-[12px] font-medium text-[#BAE6FD]">{path}</p>
             </div>
-            <p className="mt-2 text-[11px] text-muted-foreground">Polled every 5 seconds</p>
+            <p className="mt-2 text-[11px] text-muted-foreground">
+              Server function (TanStack Start)
+            </p>
           </div>
         ))}
       </div>
